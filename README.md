@@ -21,7 +21,7 @@ magic-idea是一个现代化的代码编辑器，具有丰富的功能面板和�
 
 
 #### 体验地址
-* [Magic IDEA在线服务](https://amofly.cn/vs-idea/index.html "Magic IDEA在线服务")
+* [Magic IDEA在线服务](https://magic-idea.dongqifei.deno.net "Magic IDEA在线服务")
 
 
 #### 项目截图
