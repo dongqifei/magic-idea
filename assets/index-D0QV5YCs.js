@@ -1,1 +1,0 @@
-import{P as o,a as e}from"./index-Oj7xzQpQ.js";import{c as l,d as t,p as u,b as p,r as s}from"./index-Oj7xzQpQ.js";function i(n){n(o).to(o).inSingletonScope(),n(e).to(e).inSingletonScope()}export{e as PluginLoader,o as PluginManager,i as bindPluginModule,l as buildRegList,t as pluginContainerModule,u as pluginLoader,p as pluginManager,s as regContainerModule};
