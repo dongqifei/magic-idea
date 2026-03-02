@@ -490,4 +490,3 @@ definePlugin('@plugins/cn.magic-idea.embedded-agent', ['@capital/core/preference
   plugin.regContainerModule(AIAgentModule);
 
 }));
-//# sourceMappingURL=index.js.map

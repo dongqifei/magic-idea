@@ -2561,4 +2561,3 @@ definePlugin('@plugins/cn.magic-idea.code-formatter', ['exports', '@capital/shar
   Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
-//# sourceMappingURL=index.js.map
