@@ -33,7 +33,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: lts/*
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -47,7 +47,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: install frontend dependencies
-        run: npm ci
+        run: npm install # change this to npm, pnpm or bun depending on which one you use.
 
       # ========== 编译TS代码 + pkg生成对应架构idea-server ==========
       - name: Build TS & Generate idea-server binary
@@ -67,8 +67,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_PRIVATE_KEY_PWD }}
         with:
           tagName: app-v__VERSION__
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseName: 'Magic IDEA v__VERSION__'
+          releaseBody: '修复了若干问题，提升了稳定性。'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

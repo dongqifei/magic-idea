@@ -42,7 +42,7 @@
       "icons/icon.png"
     ],
     "externalBin": ["binaries/idea-server"],
-	"macOS": {
+	  "macOS": {
       "minimumSystemVersion": "10.15"
     },
     "windows": {
