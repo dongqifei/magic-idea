@@ -8,17 +8,23 @@ on:
 jobs:
   publish-tauri:
     permissions:
-      contents: write  # 必须有这个才能创建 Release
+      contents: write
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # M1/M2/M3
+          - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # Intel
+            pkg_target: macos-arm64
+            bin_name: idea-server-aarch64-apple-darwin
+          - platform: 'macos-latest'
             args: '--target x86_64-apple-darwin'
+            pkg_target: macos-x64
+            bin_name: idea-server-x86_64-apple-darwin
           - platform: 'windows-latest'
             args: ''
+            pkg_target: win-x64
+            bin_name: idea-server-x86_64-pc-windows-msvc.exe
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -27,7 +33,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 24
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -41,13 +47,22 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: install frontend dependencies
-        run: npm ci  # 你用 npm 就改成 npm ci
+        run: npm ci
 
-      # 在 tauri-action 里注入签名环境变量
+      # ========== 编译TS代码 + pkg生成对应架构idea-server ==========
+      - name: Build TS & Generate idea-server binary
+        run: |
+          # 编译ts
+          npx tsc
+          npx tsc-alias
+          # pkg打包对应平台架构
+          npx pkg ./dist/index.js --target ${{ matrix.pkg_target }} --output src-tauri/binaries/${{ matrix.bin_name }}
+        shell: bash
+
+      # 执行tauri打包
       - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 签名密钥
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY_TEXT }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_PRIVATE_KEY_PWD }}
         with:
