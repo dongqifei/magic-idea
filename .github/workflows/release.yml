@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  publish-tauri:
+  build-bundles:
     permissions:
       contents: write
     strategy:
@@ -17,16 +17,25 @@ jobs:
             args: '--target aarch64-apple-darwin'
             pkg_target: macos-arm64
             bin_name: idea-server-aarch64-apple-darwin
+            updater_platform: dmg
+            asset_name_suffix: _aarch64.dmg
           - platform: 'macos-latest'
             args: '--target x86_64-apple-darwin'
             pkg_target: macos-x64
             bin_name: idea-server-x86_64-apple-darwin
+            updater_platform: dmg
+            asset_name_suffix: _x86_64.dmg
           - platform: 'windows-latest'
             args: ''
             pkg_target: win-x64
             bin_name: idea-server-x86_64-pc-windows-msvc.exe
+            updater_platform: nsis
+            asset_name_suffix: _x64-setup.exe
 
     runs-on: ${{ matrix.platform }}
+    outputs:
+      version: ${{ steps.extract-version.outputs.ver }}
+      tag: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,35 +49,154 @@ jobs:
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
-
       - name: install frontend dependencies
         run: npm install # change this to npm, pnpm or bun depending on which one you use.
 
-      # ========== 编译TS代码 + pkg生成对应架构idea-server ==========
       - name: Build TS & Generate idea-server binary
         run: |
-          # 编译ts
           npx tsc
           npx tsc-alias
-          # pkg打包对应平台架构
           npx pkg ./dist/index.js --target ${{ matrix.pkg_target }} --output src-tauri/binaries/${{ matrix.bin_name }}
         shell: bash
 
-      # 执行tauri打包
-      - uses: tauri-apps/tauri-action@v1
+      - name: Extract version
+        id: extract-version
+        run: |
+          VER=$(echo ${{ github.ref_name }} | sed 's/^v//')
+          echo "ver=$VER" >> $GITHUB_OUTPUT
+
+      - name: Run Tauri build
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY_TEXT }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_PRIVATE_KEY_PWD }}
         with:
-          tagName: app-v__VERSION__
-          releaseName: 'Magic IDEA v__VERSION__'
-          releaseBody: '修复了若干问题，提升了稳定性。'
+          tagName: ${{ github.ref_name }}
+          releaseName: Magic IDEA ${{ github.ref_name }}
+          releaseBody: Official release, download from Gitee for China mainland.
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+          includeUpdaterJson: false
+
+      - name: Export asset info
+        id: asset-info
+        run: |
+          VER=${{ steps.extract-version.outputs.ver }}
+          ASSET_NAME="MagicIDEA_${VER}${{ matrix.asset_name_suffix }}"
+          GITEE_BASE_URL="https://gitee.com/${{ secrets.GITEE_USERNAME }}/${{ secrets.GITEE_REPO }}/releases/download/${{ github.ref_name }}"
+          ASSET_URL="${GITEE_BASE_URL}/${ASSET_NAME}"
+          SIG_PATH=src-tauri/target/${{ matrix.args }}/release/bundle/${{ matrix.updater_platform }}/*.sig
+          SIGNATURE=$(cat $SIG_PATH)
+          echo "asset_name=$ASSET_NAME" >> $GITHUB_OUTPUT
+          echo "asset_url=$ASSET_URL" >> $GITHUB_OUTPUT
+          echo "sig=$SIGNATURE" >> $GITHUB_OUTPUT
+          echo "platform=${{ matrix.updater_platform }}" >> $GITHUB_OUTPUT
+
+      - name: Upload asset to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.tauri-build.outputs.uploadUrl }}
+          asset_path: src-tauri/target/${{ matrix.args }}/release/bundle/${{ matrix.updater_platform }}/${{ steps.asset-info.outputs.asset_name }}
+          asset_name: ${{ steps.asset-info.outputs.asset_name }}
+          asset_content_type: application/octet-stream
+
+  publish-gitee-release:
+    needs: [build-bundles]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jq & curl
+        run: sudo apt install -y jq curl
+
+      - name: Prepare all assets & generate latest.json
+        id: gen-latest
+        run: |
+          VER=${{ needs.build-bundles.outputs.version }}
+          TAG=${{ github.ref_name }}
+          GITEE_BASE="https://gitee.com/${{ secrets.GITEE_USERNAME }}/${{ secrets.GITEE_REPO }}/releases/download/${TAG}"
+          DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ")
+
+          cat > latest.json <<EOF
+          {
+            "version": "${VER}",
+            "notes": "Official release, download from Gitee for China mainland.",
+            "pub_date": "${DATE}",
+            "platforms": {}
+          }
+          EOF
+
+          # Mac aarch64
+          SIG_MAC_ARM=$(cat src-tauri/target/aarch64-apple-darwin/release/bundle/macos/*.sig)
+          NAME_MAC_ARM=MagicIDEA_${VER}_aarch64.dmg
+          URL_MAC_ARM=${GITEE_BASE}/${NAME_MAC_ARM}
+          jq --arg p "darwin-aarch64" --arg u "$URL_MAC_ARM" --arg s "$SIG_MAC_ARM" \
+            '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+
+          # Mac x86_64
+          SIG_MAC_X64=$(cat src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.sig)
+          NAME_MAC_X64=MagicIDEA_${VER}_x86_64.dmg
+          URL_MAC_X64=${GITEE_BASE}/${NAME_MAC_X64}
+          jq --arg p "darwin-x86_64" --arg u "$URL_MAC_X64" --arg s "$SIG_MAC_X64" \
+            '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+
+          # Windows x64
+          SIG_WIN=$(cat src-tauri/target/release/bundle/nsis/*.sig)
+          NAME_WIN=MagicIDEA_${VER}_x64-setup.exe
+          URL_WIN=${GITEE_BASE}/${NAME_WIN}
+          jq --arg p "windows-x86_64" --arg u "$URL_WIN" --arg s "$SIG_WIN" \
+            '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=$VER" >> $GITHUB_OUTPUT
+
+      - name: Create Gitee Release & Upload Assets
+        run: |
+          TAG=${{ github.ref_name }}
+          ACCESS_TOKEN=${{ secrets.GITEE_ACCESS_TOKEN }}
+          OWNER=${{ secrets.GITEE_USERNAME }}
+          REPO=${{ secrets.GITEE_REPO }}
+          NAME="Magic IDEA ${{ github.ref_name }}"
+          BRANCH="master"
+          BODY="国内下载加速：shturl.cc/fdwdlb4l${OWNER}/${REPO}/releases"
+
+          # 1. 创建 Gitee Release
+          RELEASE_RES=$(curl -s -X POST \
+            -H "access_token: ${ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "tag_name": "'"${TAG}"'",
+              "name": "'"${NAME}"'",
+              "body": "'"${BODY}"'",
+              "prerelease": false,
+              "target_commitish": "'"${BRANCH}"'"
+            }' \
+            "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases")
+
+          RELEASE_ID=$(echo $RELEASE_RES | jq -r '.id')
+          if [ "$RELEASE_ID" == "null" ]; then
+            echo "创建 Gitee Release 失败：$RELEASE_RES"
+            exit 1
+          fi
+          echo "Gitee Release ID: $RELEASE_ID"
+
+          # 2. 上传所有文件
+          upload_file() {
+            local file_path=$1
+            local file_name=$(basename $file_path)
+            echo "上传 $file_name ..."
+            curl -s -X POST \
+              -H "access_token: ${ACCESS_TOKEN}" \
+              -F "file=@${file_path}" \
+              "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${RELEASE_ID}/attach_files"
+          }
+
+          upload_file "src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/MagicIDEA_*.dmg"
+          upload_file "src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/MagicIDEA_*.dmg"
+          upload_file "src-tauri/target/release/bundle/nsis/MagicIDEA_*.exe"
+          upload_file "latest.json"
