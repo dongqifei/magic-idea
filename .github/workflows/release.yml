@@ -64,6 +64,7 @@ jobs:
         run: |
           VER=$(echo ${{ github.ref_name }} | sed 's/^v//')
           echo "ver=$VER" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Run Tauri build
         id: tauri-build
