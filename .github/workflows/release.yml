@@ -79,7 +79,7 @@ jobs:
           prerelease: true
           args: ${{ matrix.args }}
           uploadWorkflowArtifacts: true
-          workflowArtifactNamePattern: "bundle-${{ matrix.platform }}-${{ matrix.pkg_target }}"
+          workflowArtifactNamePattern: "bundle-[platform]-[arch]"
 
   # ========== 新增：同步到 Gitee ==========
   sync-to-gitee:
