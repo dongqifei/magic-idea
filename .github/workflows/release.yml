@@ -27,6 +27,9 @@ jobs:
             bin_name: idea-server-x86_64-pc-windows-msvc.exe
 
     runs-on: ${{ matrix.platform }}
+    outputs:
+      version: ${{ steps.extract-version.outputs.ver }}
+      tag: ${{ steps.extract-version.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,16 +50,23 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: install frontend dependencies
-        run: npm install # change this to npm, pnpm or bun depending on which one you use.
+        run: npm install
 
       # ========== 编译TS代码 + pkg生成对应架构idea-server ==========
       - name: Build TS & Generate idea-server binary
         run: |
-          # 编译ts
           npx tsc
           npx tsc-alias
-          # pkg打包对应平台架构
           npx pkg ./dist/index.js --target ${{ matrix.pkg_target }} --output src-tauri/binaries/${{ matrix.bin_name }}
+        shell: bash
+
+      # 提取版本号
+      - name: Extract version
+        id: extract-version
+        run: |
+          VER=$(echo ${{ github.ref_name }} | sed 's/^v//')
+          echo "ver=$VER" >> $GITHUB_OUTPUT
+          echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
         shell: bash
 
       # 执行tauri打包
@@ -72,3 +82,191 @@ jobs:
           releaseDraft: false
           prerelease: true
           args: ${{ matrix.args }}
+          uploadWorkflowArtifacts: true
+          workflowArtifactNamePattern: "bundle-${{ matrix.platform }}-${{ matrix.pkg_target }}"
+
+  # ========== 新增：同步到 Gitee ==========
+  sync-to-gitee:
+    needs: [publish-tauri]
+    runs-on: ubuntu-latest
+    if: success()  # 只有前面的 job 成功才执行
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jq & curl
+        run: sudo apt-get install -y jq curl
+
+      # 下载所有 artifacts
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      # 查看下载的文件结构（调试用）
+      - name: List downloaded artifacts
+        run: |
+          echo "=== 下载的 artifacts 结构 ==="
+          find ./artifacts -type f | sort
+          echo "============================"
+
+      # 生成 latest.json
+      - name: Generate latest.json
+        id: gen-latest
+        run: |
+          TAG="${{ needs.publish-tauri.outputs.tag }}"
+          VER="${{ needs.publish-tauri.outputs.version }}"
+          GITEE_BASE="https://gitee.com/${{ secrets.GITEE_USERNAME }}/${{ secrets.GITEE_REPO }}/releases/download/${TAG}"
+          DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ")
+
+          echo "Tag: $TAG, Version: $VER"
+
+          # 初始化 latest.json
+          cat > latest.json <<EOF
+          {
+            "version": "${VER}",
+            "notes": "修复了若干问题，提升了稳定性。",
+            "pub_date": "${DATE}",
+            "platforms": {}
+          }
+          EOF
+
+          # 查找并处理 Mac aarch64
+          ARTIFACT_DIR="./artifacts"
+          
+          # 查找 aarch64 的 .app.tar.gz 和签名
+          APP_TAR_GZ=$(find $ARTIFACT_DIR -name "*aarch64*.app.tar.gz" | head -1)
+          SIG_APP=$(find $ARTIFACT_DIR -name "*aarch64*.app.tar.gz.sig" | head -1)
+          
+          if [ -n "$APP_TAR_GZ" ] && [ -n "$SIG_APP" ]; then
+            NAME=$(basename "$APP_TAR_GZ")
+            URL="${GITEE_BASE}/${NAME}"
+            SIG=$(cat "$SIG_APP")
+            jq --arg p "darwin-aarch64" --arg u "$URL" --arg s "$SIG" \
+              '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+            echo "✅ darwin-aarch64 已添加"
+          else
+            echo "⚠️ 未找到 darwin-aarch64 的 .app.tar.gz 或签名文件"
+          fi
+
+          # 查找 x86_64 的 .app.tar.gz 和签名
+          APP_TAR_GZ=$(find $ARTIFACT_DIR -name "*x86_64*.app.tar.gz" | head -1)
+          SIG_APP=$(find $ARTIFACT_DIR -name "*x86_64*.app.tar.gz.sig" | head -1)
+          
+          if [ -n "$APP_TAR_GZ" ] && [ -n "$SIG_APP" ]; then
+            NAME=$(basename "$APP_TAR_GZ")
+            URL="${GITEE_BASE}/${NAME}"
+            SIG=$(cat "$SIG_APP")
+            jq --arg p "darwin-x86_64" --arg u "$URL" --arg s "$SIG" \
+              '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+            echo "✅ darwin-x86_64 已添加"
+          else
+            echo "⚠️ 未找到 darwin-x86_64 的 .app.tar.gz 或签名文件"
+          fi
+
+          # 查找 Windows 的 .exe 和签名
+          EXE=$(find $ARTIFACT_DIR -name "*.exe" | head -1)
+          SIG_EXE=$(find $ARTIFACT_DIR -name "*.exe.sig" | head -1)
+          
+          if [ -n "$EXE" ] && [ -n "$SIG_EXE" ]; then
+            NAME=$(basename "$EXE")
+            URL="${GITEE_BASE}/${NAME}"
+            SIG=$(cat "$SIG_EXE")
+            jq --arg p "windows-x86_64" --arg u "$URL" --arg s "$SIG" \
+              '.platforms[$p] = {"url":$u,"signature":$s}' latest.json > tmp && mv tmp latest.json
+            echo "✅ windows-x86_64 已添加"
+          else
+            echo "⚠️ 未找到 windows-x86_64 的 .exe 或签名文件"
+          fi
+
+          # 查看生成的 latest.json
+          cat latest.json | jq '.'
+          
+          # 输出变量供后续步骤使用
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=$VER" >> $GITHUB_OUTPUT
+
+      # 创建 Gitee Release 并上传所有文件
+      - name: Create Gitee Release & Upload Assets
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITEE_ACCESS_TOKEN }}
+          OWNER: ${{ secrets.GITEE_USERNAME }}
+          REPO: ${{ secrets.GITEE_REPO }}
+        run: |
+          TAG="${{ needs.publish-tauri.outputs.tag }}"
+          NAME="Magic IDEA ${{ needs.publish-tauri.outputs.tag }}"
+          BRANCH="master"
+          BODY="国内下载加速：https://gitee.com/${OWNER}/${REPO}/releases"
+
+          echo "创建 Gitee Release: $TAG"
+
+          # 1. 创建 Gitee Release
+          RELEASE_RES=$(curl -s -X POST \
+            -H "access_token: ${ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "tag_name": "'"${TAG}"'",
+              "name": "'"${NAME}"'",
+              "body": "'"${BODY}"'",
+              "prerelease": false,
+              "target_commitish": "'"${BRANCH}"'"
+            }' \
+            "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases")
+
+          RELEASE_ID=$(echo $RELEASE_RES | jq -r '.id')
+          if [ "$RELEASE_ID" == "null" ]; then
+            echo "❌ 创建 Gitee Release 失败：$RELEASE_RES"
+            exit 1
+          fi
+          echo "✅ Gitee Release ID: $RELEASE_ID"
+
+          # 2. 上传文件函数
+          upload_file() {
+            local file_path=$1
+            if [ ! -f "$file_path" ]; then
+              echo "⚠️ 文件不存在: $file_path"
+              return 1
+            fi
+            local file_name=$(basename "$file_path")
+            echo "📤 上传 $file_name ..."
+            curl -s -X POST \
+              -H "access_token: ${ACCESS_TOKEN}" \
+              -F "file=@${file_path}" \
+              "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${RELEASE_ID}/attach_files" \
+              | jq -r '.name' | xargs -I {} echo "✅ 上传完成: {}"
+          }
+
+          # 3. 上传所有构建产物
+          echo "=== 开始上传构建产物 ==="
+          
+          # 上传 DMG 文件（供手动安装）
+          find ./artifacts -name "*.dmg" -type f | while read -r file; do
+            upload_file "$file"
+          done
+
+          # 上传 app.tar.gz 文件（供更新器使用）
+          find ./artifacts -name "*.app.tar.gz" -type f | while read -r file; do
+            upload_file "$file"
+          done
+
+          # 上传 EXE 文件
+          find ./artifacts -name "*.exe" -type f | while read -r file; do
+            upload_file "$file"
+          done
+
+          # 上传签名文件
+          find ./artifacts -name "*.sig" -type f | while read -r file; do
+            upload_file "$file"
+          done
+
+          # 上传 latest.json
+          upload_file "latest.json"
+
+          echo "✅ 所有文件上传完成"
+
+      # 可选：清理 artifacts（释放存储空间）
+      - name: Clean up artifacts
+        if: always()
+        run: |
+          echo "🧹 清理 artifacts 以释放存储空间..."
+          rm -rf ./artifacts
+          echo "✅ 清理完成"
