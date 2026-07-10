@@ -188,7 +188,7 @@ jobs:
       # 创建 Gitee Release 并上传所有文件
       - name: Create Gitee Release & Upload Assets
         env:
-          ACCESS_TOKEN: ${{ secrets.GITEE_ACCESS_TOKEN }}
+          TOKEN: ${{ secrets.GITEE_TOKEN }}
           OWNER: ${{ secrets.GITEE_USERNAME }}
           REPO: ${{ secrets.GITEE_REPO }}
         run: |
@@ -201,7 +201,7 @@ jobs:
 
           # 1. 创建 Gitee Release
           RELEASE_RES=$(curl -s -X POST \
-            -H "access_token: ${ACCESS_TOKEN}" \
+            -H "Authorization: Bearer ${TOKEN}" \
             -H "Content-Type: application/json" \
             -d '{
               "tag_name": "'"${TAG}"'",
@@ -229,7 +229,7 @@ jobs:
             local file_name=$(basename "$file_path")
             echo "📤 上传 $file_name ..."
             curl -s -X POST \
-              -H "access_token: ${ACCESS_TOKEN}" \
+              -H "Authorization: Bearer ${TOKEN}" \
               -F "file=@${file_path}" \
               "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${RELEASE_ID}/attach_files" \
               | jq -r '.name' | xargs -I {} echo "✅ 上传完成: {}"
