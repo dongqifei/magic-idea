@@ -79,13 +79,15 @@ jobs:
           prerelease: true
           args: ${{ matrix.args }}
           uploadWorkflowArtifacts: true
-          workflowArtifactNamePattern: "bundle-[platform]-[arch]"
+          #workflowArtifactNamePattern: "bundle-[platform]-[arch]"
+          workflowArtifactNamePattern: "bundle-${{ matrix.platform }}-${{ matrix.pkg_target }}-${{ github.run_id }}-${{ github.run_attempt }}"
 
   # ========== 新增：同步到 Gitee ==========
   sync-to-gitee:
     needs: [publish-tauri]
     runs-on: ubuntu-latest
-    if: success()  # 只有前面的 job 成功才执行
+    #if: success()  # 只有前面的 job 成功才执行
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' && always() }}
     steps:
       - uses: actions/checkout@v4
 
