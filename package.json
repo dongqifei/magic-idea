@@ -1,0 +1,48 @@
+{
+  "name": "magic-idea-backend",
+  "version": "1.0.0",
+  "description": "Node.js backend for magic-idea Proxy",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "build": "tsc && tsc-alias && pkg ./dist/index.js --output idea-server",
+    "prod": "node dist/index.js"
+  },
+  "main": "index.ts",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+	  "@tauri-apps/cli": "^2.11.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.6.0",
+    "@types/ws": "^8.18.1",
+    "@yao-pkg/pkg": "^6.19.0",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.17",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "inversify": "^6.2.2",
+    "js-yaml": "^4.1.1",
+    "keytar": "^7.9.0",
+    "msgpackr": "^1.11.9",
+    "openai": "^6.35.0",
+    "reflect-metadata": "^0.2.2",
+    "route-parser": "^0.0.5",
+    "safer-buffer": "^2.1.2",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "undici": "^8.2.0",
+    "uuid": "^14.0.0",
+    "vscode-languageserver-protocol": "^3.17.5",
+    "vscode-uri": "^3.1.0",
+    "ws": "^8.20.0"
+  }
+}

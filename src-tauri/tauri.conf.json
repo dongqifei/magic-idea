@@ -1,0 +1,77 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "MagicIDEA",
+  "version": "0.0.7",
+  "identifier": "cn.amofly.magicidea",
+  "build": {
+    "frontendDist": "../web",
+    "devUrl": "http://localhost:3000"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Magic IDEA",
+        "width": 1300,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": false,
+        "devtools": true,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": false,
+        "scope": ["**/*"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": "nsis,dmg",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.png"
+    ],
+    "externalBin": ["binaries/idea-server"],
+	"macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "windows": {
+      "nsis": {
+        "displayLanguageSelector": false,
+        "installMode": "both",
+        "languages": ["English", "SimpChinese"],
+        "installerIcon": "icons/icon.ico",
+        "installerHooks": "nsis/installer.nsh"
+      },
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
+      }
+    }
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["magicidea"]
+      }
+    },
+    "updater": {
+      "windows": {
+        "installMode": "basicUi"
+      },
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5QjU4MDkyODgzNjQ5RTAKUldUZ1NUYUlrb0MxK1IxZVZNeUFJb25hczhDaVhQSnFKbXRubGFHd2htNHduTEhhem1LMkRML0UK",
+      "endpoints": [
+        "https://gitee.com/dongqifei/magic-idea/releases/download/latest/latest.json"
+      ]
+    }
+  }
+}

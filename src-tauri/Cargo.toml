@@ -1,0 +1,31 @@
+[package]
+name = "MagicIDEA"
+version = "0.0.7"
+description = "一款专为magic-api开发者设计的现代化代码编辑器"
+authors = ["amofly"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.5.6", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.11.0", features = ["devtools"] }
+tauri-plugin-log = "2"
+tauri-plugin-frame = "1.1.6"
+tauri-plugin-updater = "2.10.1"
+tauri-plugin-opener = "2.5.4"
+tauri-plugin-deep-link = "2.4.9"
+tauri-plugin-shell = "2.3.5"
+tauri-plugin-store = "2.4.3"
