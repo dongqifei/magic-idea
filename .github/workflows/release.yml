@@ -41,7 +41,7 @@ jobs:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install frontend dependencies
-        run: npm cli
+        run: npm install
 
       # ========== 编译TS代码 + pkg生成对应架构idea-server ==========
       - name: Build TS & Generate idea-server binary

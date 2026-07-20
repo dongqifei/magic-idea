@@ -9,5 +9,6 @@ npm run dev
 npm run build
 
 
-## 重命名
-node rename.js
+## 推送标签
+git tag v0.0.8
+git push origin v0.0.8
