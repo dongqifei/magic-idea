@@ -28,7 +28,7 @@ import {
 // } from '@MagicIdea/core/shared/vscode-languageserver-protocol';
 import {
     ConnectionContainerModule
-} from '@MagicIdea/messaging/connection-container-module';
+} from '@MagicIdea/core/messaging/connection-container-module';
 import {
     LanguageModelRegistry,
     LanguageModelProvider,

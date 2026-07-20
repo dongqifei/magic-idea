@@ -8,6 +8,12 @@ import { ContributionProvider, MaybePromise } from './common';
 import { Stopwatch } from './performance';
 import { LogLevel } from './logger/logger-types';
 
+/**
+ * The path to the application project directory. This is the directory where the application code is located.
+ * Mostly contains the `package.json` file and the `lib` directory.
+ */
+export const BackendApplicationPath = process.env.THEIA_APP_PROJECT_PATH || process.cwd();
+
 const TIMER_WARNING_THRESHOLD = 50;
 
 export const BackendApplicationServer = Symbol('BackendApplicationServer');

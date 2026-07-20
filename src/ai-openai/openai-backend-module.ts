@@ -18,7 +18,7 @@ import { interfaces } from 'inversify';
 import { OPENAI_LANGUAGE_MODELS_MANAGER_PATH, OpenAiLanguageModelsManager } from './common/openai-language-models-manager';
 import { ConnectionHandler, RpcConnectionHandler } from '@MagicIdea/core/common';
 import { OpenAiLanguageModelsManagerImpl } from './openai-language-models-manager-impl';
-import { ConnectionContainerModule } from '@MagicIdea/messaging/connection-container-module';
+import { ConnectionContainerModule } from '@MagicIdea/core/messaging/connection-container-module';
 import { OpenAiModelUtils } from './openai-language-model';
 import { OpenAiResponseApiUtils } from './openai-response-api-utils';
 

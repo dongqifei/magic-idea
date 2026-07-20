@@ -19,7 +19,7 @@ import { ANTHROPIC_LANGUAGE_MODELS_MANAGER_PATH, AnthropicLanguageModelsManager 
 import { ConnectionHandler, RpcConnectionHandler } from '@MagicIdea/core/common';
 // import { PreferenceContribution } from "@MagicIdea/core/performance"
 import { AnthropicLanguageModelsManagerImpl } from './anthropic-language-models-manager-impl';
-import { ConnectionContainerModule } from '@MagicIdea/messaging/connection-container-module';
+import { ConnectionContainerModule } from '@MagicIdea/core/messaging/connection-container-module';
 // import { AnthropicPreferencesSchema } from './common/anthropic-preferences';
 
 // We use a connection module to handle AI services separately for each frontend.

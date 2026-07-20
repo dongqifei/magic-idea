@@ -16,7 +16,7 @@
 
 import { interfaces } from 'inversify';
 import { ConnectionHandler, RpcConnectionHandler } from '../core/common';
-import { ConnectionContainerModule } from '../messaging/connection-container-module';
+import { ConnectionContainerModule } from '../core/messaging/connection-container-module';
 import {
     CopilotLanguageModelsManager,
     COPILOT_LANGUAGE_MODELS_MANAGER_PATH,
