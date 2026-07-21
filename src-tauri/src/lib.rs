@@ -1,3 +1,5 @@
+// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 use std::sync::{
     Mutex,
@@ -5,7 +7,8 @@ use std::sync::{
 use tauri::{
     AppHandle, Emitter, Manager, WindowEvent
 };
-use tauri_plugin_frame::FramePluginBuilder;
+// use tauri_plugin_frame::FramePluginBuilder;
+use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_shell::ShellExt;
 use tauri_plugin_shell::process::CommandEvent;
@@ -68,16 +71,17 @@ pub fn run() {
       open_devtools,
       close_devtools,
     ])
-    .plugin(
-      FramePluginBuilder::new()
-        .titlebar_height(39)
-        .button_width(46)
-        .auto_titlebar(true)
-        .snap_overlay_delay_ms(15)
-        .close_hover_bg("rgba(196,43,28,1)")
-        .button_hover_bg("rgba(255,255,255,0.1)")
-        .build()
-    )
+    // .plugin(
+    //   FramePluginBuilder::new()
+    //     .titlebar_height(39)
+    //     .button_width(46)
+    //     .auto_titlebar(true)
+    //     .snap_overlay_delay_ms(15)
+    //     .close_hover_bg("rgba(196,43,28,1)")
+    //     .button_hover_bg("rgba(255,255,255,0.1)")
+    //     .build()
+    // )
+    .plugin(tauri_plugin_decorum::init())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_deep_link::init())
     .plugin(tauri_plugin_shell::init())
@@ -88,6 +92,24 @@ pub fn run() {
         }
     })
     .setup(|app| {
+      // Create a custom titlebar for main window
+      // On Windows this will hide decoration and render custom window controls
+      // On macOS it expects a hiddenTitle: true and titleBarStyle: overlay
+      let main_window = app.get_webview_window("main").unwrap();
+      main_window.create_overlay_titlebar().unwrap();
+
+      #[cfg(target_os = "macos")] {
+				// Set a custom inset to the traffic lights
+				main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
+
+				// Make window transparent without privateApi
+				main_window.make_transparent().unwrap();
+
+				// Set window level
+				// NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
+				// main_window.set_window_level(25).unwrap();
+			}
+      
       #[cfg(desktop)]
       app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
 

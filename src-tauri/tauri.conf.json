@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "MagicIDEA",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "identifier": "cn.amofly.magicidea",
   "build": {
     "frontendDist": "../web",
@@ -16,6 +16,8 @@
         "height": 800,
         "resizable": true,
         "fullscreen": false,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
         "decorations": false,
         "transparent": false,
         "devtools": true,

@@ -1,6 +1,6 @@
 [package]
 name = "MagicIDEA"
-version = "0.0.8"
+version = "0.0.9"
 description = "一款专为magic-api开发者设计的现代化代码编辑器"
 authors = ["amofly"]
 license = ""
@@ -29,3 +29,4 @@ tauri-plugin-opener = "2.5.4"
 tauri-plugin-deep-link = "2.4.9"
 tauri-plugin-shell = "2.3.5"
 tauri-plugin-store = "2.4.3"
+tauri-plugin-decorum = "1.1.1"
