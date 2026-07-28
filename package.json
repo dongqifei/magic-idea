@@ -1,6 +1,6 @@
 {
   "name": "magic-idea-backend",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Node.js backend for magic-idea Proxy",
   "scripts": {
     "start": "ts-node src/index.ts",
