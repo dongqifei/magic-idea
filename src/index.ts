@@ -18,6 +18,7 @@ import { bindAnthropicBackendModule } from './ai-anthropic/anthropic-backend-mod
 import { bindRequestBackendModule } from './core/request/backend-request-module';
 import { EnvVariablesServer, envVariablesPath } from './core/common/env-variables';
 import { EnvVariablesServerImpl } from './core/env-variables';
+import { bindMcpBackendModule } from './ai-mcp/mcp-backend-module'
 
 // 创建容器实例
 const container = new Container();
@@ -69,6 +70,9 @@ export const backendApplicationModule = new ContainerModule(bind => {
 
   // Bind AI Anthropic Backend Module
   bindAnthropicBackendModule(bind);
+
+  // Bind Mcp Backend Module
+  bindMcpBackendModule(bind);
 
   bindNodeStopwatch(bind);
   bindBackendStopwatchServer(bind);
