@@ -20,12 +20,15 @@
       "@MagicIdea/*": [
         "src/*"
       ],
+      "@modelcontextprotocol/sdk/types.js": ["node_modules/@modelcontextprotocol/sdk/dist/esm/types.js"],
+      "@modelcontextprotocol/sdk/client/*": ["node_modules/@modelcontextprotocol/sdk/dist/esm/client/*"],
+      "@modelcontextprotocol/sdk/server/*": ["node_modules/@modelcontextprotocol/sdk/dist/esm/server/*"]
     }
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules", "dist"
   ]
 }

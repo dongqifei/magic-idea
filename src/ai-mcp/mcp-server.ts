@@ -98,7 +98,7 @@ export class MCPServer {
         if (!this.workspaceRoots) {
             this.client = new Client(
                 {
-                    name: 'theia-client',
+                    name: 'magic-idea-client',
                     version: '1.0.0',
                 },
                 {
@@ -108,7 +108,7 @@ export class MCPServer {
         } else {
             this.client = new Client(
                 {
-                    name: 'theia-client',
+                    name: 'magic-idea-client',
                     version: '1.0.0',
                 },
                 {

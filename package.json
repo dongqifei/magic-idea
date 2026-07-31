@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
-    "build": "tsc && tsc-alias && pkg ./dist/index.js --output idea-server",
+    "build": "tsc && tsc-alias && pkg ./dist/index.js --config pkg.config.json --output idea-server --fallback-to-source",
     "prod": "node dist/index.js"
   },
   "main": "index.ts",
@@ -18,7 +18,7 @@
     "@types/node": "^25.6.0",
     "@types/tough-cookie": "^4.0.5",
     "@types/ws": "^8.18.1",
-    "@yao-pkg/pkg": "^6.19.0",
+    "@yao-pkg/pkg": "^6.21.0",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.17",
@@ -27,8 +27,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^4.3.6",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "inversify": "^6.2.2",
@@ -46,6 +45,7 @@
     "uuid": "^14.0.0",
     "vscode-languageserver-protocol": "^3.17.5",
     "vscode-uri": "^3.1.0",
-    "ws": "^8.20.0"
+    "ws": "^8.20.0",
+    "zod": "^4.3.6"
   }
 }

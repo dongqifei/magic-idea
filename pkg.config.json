@@ -1,0 +1,7 @@
+{
+  "assets": [
+    "node_modules/pkce-challenge/**/*",
+    "node_modules/@modelcontextprotocol/sdk/**/*.js",
+    "node_modules/@modelcontextprotocol/sdk/**/*.json"
+  ]
+}
