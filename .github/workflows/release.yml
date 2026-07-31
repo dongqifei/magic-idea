@@ -48,7 +48,7 @@ jobs:
         run: |
           npx tsc
           npx tsc-alias
-          npx pkg ./dist/index.js --target ${{ matrix.pkg_target }} --output src-tauri/binaries/${{ matrix.bin_name }}
+          npx pkg ./dist/index.js --target ${{ matrix.pkg_target }} --config pkg.config.json --output src-tauri/binaries/${{ matrix.bin_name }} --fallback-to-source
         shell: bash
 
       # 执行tauri打包
