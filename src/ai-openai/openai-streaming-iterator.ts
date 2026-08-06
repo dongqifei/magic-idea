@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
+import { getLogger } from '@MagicIdea/core/logger';
 import { LanguageModelStreamResponsePart, ToolCallResult, ToolCallTextResult } from '@MagicIdea/ai-core/common';
 import { CancellationError, CancellationToken, Disposable, DisposableCollection } from '@MagicIdea/core/common';
 import { Deferred } from '@MagicIdea/core/common/promise-util';
@@ -23,6 +24,7 @@ import { ChatCompletionContentPartText } from 'openai/resources';
 type IterResult = IteratorResult<LanguageModelStreamResponsePart>;
 
 export class StreamingAsyncIterator implements AsyncIterableIterator<LanguageModelStreamResponsePart>, Disposable {
+    protected readonly logger = getLogger(StreamingAsyncIterator.name);
     protected readonly requestQueue = new Array<Deferred<IterResult>>();
     protected readonly messageCache = new Array<LanguageModelStreamResponsePart>();
     protected done = false;
@@ -34,7 +36,7 @@ export class StreamingAsyncIterator implements AsyncIterableIterator<LanguageMod
         cancellationToken?: CancellationToken,
     ) {
         this.registerStreamListener('error', error => {
-            console.error('Error in OpenAI chat completion stream:', error);
+            this.logger.error('Error in OpenAI chat completion stream:', error);
             this.terminalError = error;
             this.dispose();
         });
@@ -52,7 +54,7 @@ export class StreamingAsyncIterator implements AsyncIterableIterator<LanguageMod
                     }]
                 });
             }
-            console.debug('Received Open AI message', JSON.stringify(message));
+            // this.logger.debug('Received Open AI message: ' + JSON.stringify(message));
         });
         this.registerStreamListener('end', () => {
             this.dispose();

@@ -25,6 +25,7 @@ import {
     LanguageModelTextResponse,
     UserRequest
 } from '@MagicIdea/ai-core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { CancellationToken } from '../core/common';
 import OpenAI from 'openai';
 import { RunnableToolFunctionWithoutParse } from 'openai/lib/RunnableFunction';
@@ -39,6 +40,8 @@ import type { ChatCompletionStream } from 'openai/lib/ChatCompletionStream';
  * Uses the OpenAI SDK to communicate with the Copilot API.
  */
 export class CopilotLanguageModel implements LanguageModel {
+
+    protected readonly logger = getLogger(CopilotLanguageModel.name);
 
     protected runnerOptions: RunnerOptions = {
         maxChatCompletions: 100
@@ -109,7 +112,7 @@ export class CopilotLanguageModel implements LanguageModel {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return { stream: new StreamingAsyncIterator(runner as any, cancellationToken) };
         } catch (error) {
-            console.error('Error in Copilot chat completion:', error);
+            this.logger.error('Error in Copilot chat completion:', error);
             throw error;
         }
     }
@@ -133,7 +136,7 @@ export class CopilotLanguageModel implements LanguageModel {
                 } : undefined
             };
         } catch (error) {
-            console.error('Error in Copilot chat completion:', error);
+            this.logger.error('Error in Copilot chat completion:', error);
             throw error;
         }
     }
@@ -149,7 +152,7 @@ export class CopilotLanguageModel implements LanguageModel {
 
         const message = result.choices[0].message;
         if (message.refusal || message.parsed === undefined) {
-            console.error('Error in Copilot chat completion:', JSON.stringify(message));
+            this.logger.error('Error in Copilot chat completion:', JSON.stringify(message));
         }
 
         return {

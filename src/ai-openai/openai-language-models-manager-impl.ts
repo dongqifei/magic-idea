@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { LanguageModelRegistry, LanguageModelStatus } from '@MagicIdea/ai-core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { getProxyUrl } from '@MagicIdea/ai-core/proxy-util';
 import { inject, injectable } from 'inversify';
 import { OpenAiModel, OpenAiModelUtils } from './openai-language-model';
@@ -23,6 +24,8 @@ import { OpenAiLanguageModelsManager, OpenAiModelDescription } from './common';
 
 @injectable()
 export class OpenAiLanguageModelsManagerImpl implements OpenAiLanguageModelsManager {
+
+    protected readonly logger = getLogger(OpenAiLanguageModelsManagerImpl.name);
 
     @inject(OpenAiModelUtils)
     protected readonly openAiModelUtils: OpenAiModelUtils;
@@ -85,7 +88,7 @@ export class OpenAiLanguageModelsManagerImpl implements OpenAiLanguageModelsMana
 
             if (model) {
                 if (!(model instanceof OpenAiModel)) {
-                    console.warn(`OpenAI: model ${modelDescription.id} is not an OpenAI model`);
+                    this.logger.warn(`OpenAI: model ${modelDescription.id} is not an OpenAI model`);
                     continue;
                 }
                 await this.languageModelRegistry.patchLanguageModel<OpenAiModel>(modelDescription.id, {

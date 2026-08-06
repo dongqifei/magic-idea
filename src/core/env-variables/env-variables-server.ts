@@ -19,6 +19,7 @@ import { homedir } from 'os';
 import { injectable } from 'inversify';
 // import * as drivelist from 'drivelist';
 import { pathExists, mkdir } from 'fs-extra';
+import { getLogger } from '@MagicIdea/core/logger';
 import { EnvVariable, EnvVariablesServer } from '../common/env-variables'
 import { isWindows } from '../common/os';
 import { FileUri } from '../common/file-uri';
@@ -27,6 +28,8 @@ import { BackendApplicationPath } from '../backend-application';
 @injectable()
 export class EnvVariablesServerImpl implements EnvVariablesServer {
 
+    protected readonly logger = getLogger(EnvVariablesServerImpl.name);
+
     protected readonly envs: { [key: string]: EnvVariable } = {};
     protected readonly homeDirUri = FileUri.create(homedir()).toString();
     protected readonly configDirUri: Promise<string>;
@@ -34,7 +37,7 @@ export class EnvVariablesServerImpl implements EnvVariablesServer {
 
     constructor() {
         this.configDirUri = this.createConfigDirUri();
-        this.configDirUri.then(configDirUri => console.log(`Configuration directory URI: '${configDirUri}'`));
+        this.configDirUri.then(configDirUri => this.logger.info(`Configuration directory URI: '${configDirUri}'`));
         const prEnv = process.env;
         Object.keys(prEnv).forEach((key: string) => {
             let keyName = key;

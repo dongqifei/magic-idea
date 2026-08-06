@@ -4,7 +4,7 @@ import { LogFormatter } from './logger-formatter';
 /** 控制台输出器（默认输出到控制台） */
 export class ConsoleAppender implements Appender {
   name = 'ConsoleAppender';
-  private defaultFormat = '%d{yyyy-MM-dd HH:mm:ss.SSS} [%c] %p - %m';
+  private defaultFormat = '%d{yyyy-MM-dd HH:mm:ss.SSS} %p --- [%c] %m %ex';
 
   constructor(private format?: string) {}
 

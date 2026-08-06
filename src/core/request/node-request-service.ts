@@ -17,6 +17,7 @@ import { CookieJar } from 'tough-cookie';
 import { request as undiciFetch, Dispatcher } from 'undici';
 import { getProxyAgent } from './proxy';
 import { CancellationToken } from '../common';
+import { getLogger } from '../logger';
 import { HttpHeaders as Headers, RequestConfiguration, RequestContext, RequestOptions, RequestService, MultipartPayload } from './common-request-service';
 
 export interface NodeRequestOptions extends RequestOptions {
@@ -28,6 +29,8 @@ export class NodeRequestService implements RequestService {
     protected proxyUrl?: string;
     protected strictSSL?: boolean;
     protected authorization?: string;
+
+    protected logger = getLogger(NodeRequestService.name);
 
     // 按会话ID隔离cookie
     protected readonly sessionCookieMap = new Map<string, CookieJar>();
@@ -70,7 +73,7 @@ export class NodeRequestService implements RequestService {
                     options.dispatcher = dispatcher;
                 }
             } catch (error) {
-                console.warn('Failed to create proxy agent:', error);
+                this.logger.error('Failed to create proxy agent:', error);
             }
         }
         return options;
@@ -187,7 +190,7 @@ export class NodeRequestService implements RequestService {
             };
             return data;
         } catch(ex){
-            console.log("Node request failed: ", ex);
+            this.logger.error("Node request failed: ", ex);
             throw ex;
         } finally {
             if (cancellationListener) {

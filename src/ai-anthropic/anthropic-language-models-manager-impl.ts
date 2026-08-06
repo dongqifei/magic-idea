@@ -13,7 +13,7 @@
 //
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
-
+import { getLogger } from '@MagicIdea/core/logger';
 import { LanguageModelRegistry, LanguageModelStatus } from '@MagicIdea/ai-core/common';
 import { getProxyUrl } from '@MagicIdea/ai-core/proxy-util';
 import { inject, injectable } from 'inversify';
@@ -22,6 +22,8 @@ import { AnthropicLanguageModelsManager, AnthropicModelDescription } from './com
 
 @injectable()
 export class AnthropicLanguageModelsManagerImpl implements AnthropicLanguageModelsManager {
+
+    protected readonly logger = getLogger(AnthropicLanguageModelsManagerImpl.name);
 
     protected _apiKey: string | undefined;
     protected _proxyUrl: string | undefined;
@@ -52,7 +54,7 @@ export class AnthropicLanguageModelsManagerImpl implements AnthropicLanguageMode
 
             if (model) {
                 if (!(model instanceof AnthropicModel)) {
-                    console.warn(`Anthropic: model ${modelDescription.id} is not an Anthropic model`);
+                    this.logger.warn(`Anthropic: model ${modelDescription.id} is not an Anthropic model`);
                     continue;
                 }
                 await this.languageModelRegistry.patchLanguageModel<AnthropicModel>(modelDescription.id, {

@@ -16,6 +16,7 @@
 
 import { LanguageModelRegistry, LanguageModelStatus } from '@MagicIdea/ai-core/common';
 import { Disposable, DisposableCollection } from '@MagicIdea/core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { inject, injectable, postConstruct } from 'inversify';
 import { CopilotLanguageModelsManager, CopilotModelDescription, COPILOT_PROVIDER_ID, getCopilotApiBaseUrl } from './common';
 import { CopilotOAuthConfig } from './common/copilot-oauth-config';
@@ -28,6 +29,8 @@ import { CopilotAuthServiceImpl } from './copilot-auth-service-impl';
  */
 @injectable()
 export class CopilotLanguageModelsManagerImpl implements CopilotLanguageModelsManager, Disposable {
+
+    protected logger = getLogger(CopilotLanguageModelsManagerImpl.name)
 
     @inject(LanguageModelRegistry)
     protected readonly languageModelRegistry: LanguageModelRegistry;
@@ -72,7 +75,7 @@ export class CopilotLanguageModelsManagerImpl implements CopilotLanguageModelsMa
 
             if (model) {
                 if (!(model instanceof CopilotLanguageModel)) {
-                    console.warn(`Copilot: model ${modelDescription.id} is not a Copilot model`);
+                    this.logger.warn(`Copilot: model ${modelDescription.id} is not a Copilot model`);
                     continue;
                 }
                 await this.languageModelRegistry.patchLanguageModel<CopilotLanguageModel>(modelDescription.id, {
@@ -135,7 +138,7 @@ export class CopilotLanguageModelsManagerImpl implements CopilotLanguageModelsMa
             });
 
             if (!response.ok) {
-                console.warn(`Copilot: failed to fetch available models: ${response.status} ${response.statusText}`);
+                this.logger.warn(`Copilot: failed to fetch available models: ${response.status} ${response.statusText}`);
                 return [];
             }
 
@@ -144,10 +147,10 @@ export class CopilotLanguageModelsManagerImpl implements CopilotLanguageModelsMa
             };
             const models = data.data ?? [];
             const modelIds = this.deduplicateModels(models);
-            console.log(`Copilot: discovered ${modelIds.length} available models: ${modelIds.join(', ')}`);
+            this.logger.info(`Copilot: discovered ${modelIds.length} available models: ${modelIds.join(', ')}`);
             return modelIds;
         } catch (error) {
-            console.warn('Copilot: failed to fetch available models:', error);
+            this.logger.error('Copilot: failed to fetch available models:', error);
             return [];
         }
     }

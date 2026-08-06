@@ -33,6 +33,7 @@ import {
     UserRequest
 } from '@MagicIdea/ai-core/common';
 import { CancellationToken, isArray } from '@MagicIdea/core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { Anthropic } from '@anthropic-ai/sdk';
 import type { Base64ImageSource, ImageBlockParam, Message, MessageParam, TextBlockParam, ToolResultBlockParam } from '@anthropic-ai/sdk/resources';
 import { createProxyFetch } from '@MagicIdea/ai-core/proxy-util';
@@ -224,6 +225,8 @@ function formatToolCallResult(result: ToolCallResult): ToolResultBlockParam['con
  * translation lives in {@link anthropicReasoningFor}.
  */
 export class AnthropicModel implements LanguageModel {
+
+    protected readonly logger = getLogger(AnthropicModel.name);
 
     constructor(
         public readonly id: string,
@@ -419,7 +422,7 @@ export class AnthropicModel implements LanguageModel {
         };
 
         stream.on('error', (error: Error) => {
-            console.error('Error in Anthropic streaming:', error);
+            this.logger.error('Error in Anthropic streaming:', error);
         });
 
         return { stream: asyncIterator };

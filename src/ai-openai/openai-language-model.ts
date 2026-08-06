@@ -27,6 +27,7 @@ import {
     ReasoningSupport
 } from '@MagicIdea/ai-core/common';
 import { CancellationToken } from '@MagicIdea/core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { injectable } from 'inversify';
 import { OpenAI, AzureOpenAI } from 'openai';
 import { ChatCompletionStream } from 'openai/lib/ChatCompletionStream';
@@ -68,6 +69,8 @@ export const OpenAiModelIdentifier = Symbol('OpenAiModelIdentifier');
 export type DeveloperMessageSettings = 'user' | 'system' | 'developer' | 'mergeWithFollowingUserMessage' | 'skip';
 
 export class OpenAiModel implements LanguageModel {
+
+    protected readonly logger = getLogger(OpenAiModel.name);
 
     /**
      * The options for the OpenAI runner.
@@ -203,7 +206,7 @@ export class OpenAiModel implements LanguageModel {
         });
         const message = result.choices[0].message;
         if (message.refusal || message.parsed === undefined) {
-            console.error('Error in OpenAI chat completion stream:', JSON.stringify(message));
+            this.logger.error('Error in OpenAI chat completion stream:', JSON.stringify(message));
         }
 
         return {
@@ -267,7 +270,7 @@ export class OpenAiModel implements LanguageModel {
         } catch (error) {
             // If Response API fails, fall back to Chat Completions API
             if (error instanceof Error) {
-                console.warn(`Response API failed for model ${this.id}, falling back to Chat Completions API:`, error.message);
+                this.logger.warn(`Response API failed for model ${this.id}, falling back to Chat Completions API:` + error.message);
                 return this.handleChatCompletionsRequest(openai, request, cancellationToken);
             }
             throw error;

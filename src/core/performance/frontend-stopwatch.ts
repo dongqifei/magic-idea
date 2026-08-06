@@ -16,9 +16,12 @@
 
 import { injectable } from 'inversify';
 import { Measurement, MeasurementOptions, Stopwatch } from './index';
+import { getLogger } from '../logger';
 
 @injectable()
 export class FrontendStopwatch extends Stopwatch {
+
+    protected readonly logger = getLogger(FrontendStopwatch.name);
 
     constructor() {
         super({
@@ -51,7 +54,7 @@ export class FrontendStopwatch extends Stopwatch {
                 duration = entries[0].duration ?? Number.NaN;
                 startTime = entries[0].startTime ?? Number.NaN;
             } catch (e) {
-                console.warn(e);
+                this.logger.warn(e?.message);
                 duration = Number.NaN;
                 startTime = Number.NaN;
             }

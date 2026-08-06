@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { inject, injectable } from 'inversify';
+import { getLogger } from '@MagicIdea/core/logger';
 import { Emitter, Event, KeyStoreService } from '../core/common';
 import {
     CopilotAuthService,
@@ -45,6 +46,8 @@ interface StoredCredentials {
  */
 @injectable()
 export class CopilotAuthServiceImpl implements CopilotAuthService {
+
+    protected readonly logger = getLogger(CopilotAuthServiceImpl.name);
 
     @inject(KeyStoreService)
     protected readonly keyStoreService: KeyStoreService;
@@ -102,7 +105,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
             const data = await response.json() as DeviceCodeResponse;
             return data;
         } catch (error) {
-            console.error('Error initiating device flow:', error);
+            this.logger.error('Error initiating device flow:', error);
             throw error;
         }
     }
@@ -130,7 +133,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
             });
 
             if (!response.ok) {
-                console.error(`Token request failed: ${response.status}`);
+                this.logger.error(`Token request failed: ${response.status}`);
                 continue;
             }
 
@@ -180,12 +183,12 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
             }
 
             if (data.error === 'expired_token' || data.error === 'access_denied') {
-                console.error(`Authorization failed: ${data.error} - ${data.error_description}`);
+                this.logger.error(`Authorization failed: ${data.error} - ${data.error_description}`);
                 return false;
             }
 
             if (data.error) {
-                console.error(`Unexpected error: ${data.error} - ${data.error_description}`);
+                this.logger.error(`Unexpected error: ${data.error} - ${data.error_description}`);
                 return false;
             }
         }
@@ -212,7 +215,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
                 return userData.login;
             }
         } catch (error) {
-            console.warn('Failed to fetch GitHub user info:', error);
+            this.logger.error('Failed to fetch GitHub user info:', error);
         }
         return undefined;
     }
@@ -228,7 +231,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
                 const credentials: StoredCredentials = JSON.parse(stored);
                 // Tokens from the current OAuth App start with 'gho_'; other prefixes (e.g. 'ghu_') indicate a token from the previous GitHub App (Iv-prefixed client ID).
                 if (!credentials.accessToken.startsWith('gho_')) {
-                    console.info('Copilot: clearing outdated GitHub App token. Please sign in again.');
+                    this.logger.info('Copilot: clearing outdated GitHub App token. Please sign in again.');
                     await this.keyStoreService.deletePassword(this.oauthConfig.keystoreService, this.oauthConfig.keystoreAccount);
                     this.cachedState = { isAuthenticated: false, migrationRequired: true };
                     return this.cachedState;
@@ -241,7 +244,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
                 return this.cachedState;
             }
         } catch (error) {
-            console.warn('Failed to retrieve Copilot credentials:', error);
+            this.logger.error('Failed to retrieve Copilot credentials:', error);
         }
 
         this.cachedState = { isAuthenticated: false };
@@ -256,7 +259,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
                 return credentials.accessToken;
             }
         } catch (error) {
-            console.warn('Failed to retrieve Copilot access token:', error);
+            this.logger.error('Failed to retrieve Copilot access token:', error);
         }
         return undefined;
     }
@@ -265,7 +268,7 @@ export class CopilotAuthServiceImpl implements CopilotAuthService {
         try {
             await this.keyStoreService.deletePassword(this.oauthConfig.keystoreService, this.oauthConfig.keystoreAccount);
         } catch (error) {
-            console.warn('Failed to delete Copilot credentials:', error);
+            this.logger.error('Failed to delete Copilot credentials:', error);
         }
 
         const newState: CopilotAuthState = { isAuthenticated: false };

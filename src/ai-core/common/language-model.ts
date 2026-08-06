@@ -15,7 +15,7 @@
 // *****************************************************************************
 
 import { ContributionProvider, isFunction, isObject, IEvent as Event, Emitter, CancellationToken } from '../../core/common';
-import { getLogger  } from '../../core/logger';
+import { getLogger } from '@MagicIdea/core/logger';
 import { inject, injectable, named, postConstruct } from 'inversify';
 
 export type MessageActor = 'user' | 'ai' | 'system';
@@ -567,7 +567,7 @@ export class DefaultLanguageModelRegistryImpl implements LanguageModelRegistry {
     addLanguageModels(models: LanguageModel[]): void {
         models.forEach(model => {
             if (this.languageModels.find(lm => lm.id === model.id)) {
-                console.warn(`Tried to add already existing language model with id ${model.id}. The new model will be ignored.`);
+                this.logger.warn(`Tried to add already existing language model with id ${model.id}. The new model will be ignored.`);
                 return;
             }
             this.languageModels.push(model);
@@ -592,7 +592,7 @@ export class DefaultLanguageModelRegistryImpl implements LanguageModelRegistry {
                 this.languageModels.splice(index, 1);
                 this.changeEmitter.fire({ models: this.languageModels });
             } else {
-                console.warn(`Language model with id ${id} was requested to be removed, however it does not exist`);
+                this.logger.warn(`Language model with id ${id} was requested to be removed, however it does not exist`);
             }
         });
     }

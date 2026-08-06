@@ -14,6 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 import { injectable } from 'inversify';
+import { getLogger } from '@MagicIdea/core/logger';
 import { MCPServerDescription, MCPServerManager, MCPFrontendNotificationService } from './common/mcp-server-manager';
 import { MCPServer } from './mcp-server';
 import { Disposable } from '@MagicIdea/core/common/disposable';
@@ -21,6 +22,8 @@ import { CallToolResult, ListResourcesResult, ReadResourceResult } from '@modelc
 
 @injectable()
 export class MCPServerManagerImpl implements MCPServerManager {
+
+    protected logger = getLogger(MCPServerManagerImpl.name);
 
     protected servers: Map<string, MCPServer> = new Map();
     protected clients: Array<MCPFrontendNotificationService> = [];
@@ -33,7 +36,7 @@ export class MCPServerManagerImpl implements MCPServerManager {
             throw new Error(`MCP server "${serverName}" not found.`);
         }
         await server.stop();
-        console.log(`MCP server "${serverName}" stopped.`);
+        this.logger.info(`MCP server "${serverName}" stopped.`);
         this.notifyClients();
     }
 
@@ -123,7 +126,7 @@ export class MCPServerManagerImpl implements MCPServerManager {
                 this.serverListeners.delete(name);
             }
         } else {
-            console.warn(`MCP server "${name}" not found.`);
+            this.logger.warn(`MCP server "${name}" not found.`);
         }
         this.notifyClients();
     }

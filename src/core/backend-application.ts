@@ -4,6 +4,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import https from 'https';
+import { getLogger } from '@MagicIdea/core/logger';
 import { ContributionProvider, MaybePromise } from './common';
 import { Stopwatch } from './performance';
 import { LogLevel } from './logger/logger-types';
@@ -83,6 +84,8 @@ export interface BackendApplicationContribution {
 
 @injectable()
 export class BackendApplication {
+  
+  protected readonly logger = getLogger(BackendApplication.name);
 
   protected readonly app: express.Application = express();
 
@@ -103,7 +106,7 @@ export class BackendApplication {
           await this.measureContribution(contribution, 'initialize',
             () => contribution.initialize!());
         } catch (error) {
-          console.error('Could not initialize contribution', error);
+          this.logger.error('Could not initialize contribution', error);
         }
       }
     }));
@@ -128,11 +131,11 @@ export class BackendApplication {
                     await this.measureContribution(contribution, 'configure',
                         () => contribution.configure!(this.app));
                 } catch (error) {
-                    console.error('Could not configure contribution', error);
+                    this.logger.error('Could not configure contribution', error);
                 }
             }
         }));
-        console.info('configured all backend app contributions');
+        this.logger.info('configured all backend app contributions');
     }
 
   async start(port?: number, hostname?: string): Promise<http.Server | https.Server> {
@@ -145,7 +148,7 @@ export class BackendApplication {
 
     // 启动 HTTP 服务
     server.listen(port, () => {
-      console.log(`Theia Message Proxy backend running on http://${hostname}:${port}`);
+      this.logger.info(`Magic IDEA Message Proxy backend running on http://${hostname}:${port}`);
     });
 
     /* Allow any number of websocket servers. */
@@ -157,25 +160,25 @@ export class BackendApplication {
           await this.measureContribution(contribution, 'onStart',
             () => contribution.onStart!(server));
         } catch (error) {
-          console.error('Could not start contribution', error);
+          this.logger.error('Could not start contribution', error);
         }
       }
     }
 
     // 服务错误监听
     server.on('error', (error: Error) => {
-      console.error('Server error:', error);
+      this.logger.error('Server error:', error);
       setTimeout(() => process.exit(1), 0);
     });
 
     // 捕获全局未捕获异常
     process.on('uncaughtException', (error: Error) => {
-      console.error('Uncaught Exception:', error);
+      this.logger.error('Uncaught Exception:', error);
     });
 
     // 捕获未处理的 Promise 拒绝
     process.on('unhandledRejection', (reason: unknown, promise: Promise<unknown>) => {
-      console.error('Unhandled Rejection at:', promise, 'Reason:', reason);
+      this.logger.error(`Unhandled Rejection at: ${promise}, Reason: ${reason}`);
     });
     return server;
   }

@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { injectable, inject, named, interfaces, Container } from 'inversify';
+import { getLogger } from '@MagicIdea/core/logger';
 import { ContributionProvider, bindContributionProvider, ConnectionHandler, servicesPath } from '../common';
 import { MessagingService } from './messaging-service';
 import { ConnectionContainerModule } from './connection-container-module';
@@ -28,6 +29,8 @@ export const MainChannel = Symbol('MainChannel');
 
 @injectable()
 export class DefaultMessagingService implements MessagingService, BackendApplicationContribution {
+
+    protected readonly logger = getLogger(DefaultMessagingService.name);
 
     @inject(MessagingContainer)
     protected readonly container: interfaces.Container;
@@ -63,8 +66,8 @@ export class DefaultMessagingService implements MessagingService, BackendApplica
         const channelHandlers = this.getConnectionChannelHandlers(channel);
         multiplexer.onDidOpenChannel(event => {
             if (channelHandlers.route(event.id, event.channel)) {
-                console.debug(`Opening channel for service path '${event.id}'.`);
-                event.channel.onClose(() => console.info(`Closing channel on service path '${event.id}'.`));
+                this.logger.debug(`Opening channel for service path '${event.id}'.`);
+                event.channel.onClose(() => this.logger.info(`Closing channel on service path '${event.id}'.`));
             }
         });
     }
@@ -72,7 +75,7 @@ export class DefaultMessagingService implements MessagingService, BackendApplica
     protected createMainChannelContainer(socket: Channel): Container {
         const connectionContainer: Container = this.container.createChild() as Container;
         connectionContainer.bind(MainChannel).toConstantValue(socket);
-        socket.onClose(() => connectionContainer.unbindAllAsync().catch(e => console.error(e)));
+        socket.onClose(() => connectionContainer.unbindAllAsync().catch(e => this.logger.error(e)));
         return connectionContainer;
     }
 
@@ -93,6 +96,9 @@ export class DefaultMessagingService implements MessagingService, BackendApplica
 }
 
 export class ConnectionHandlers<T> {
+
+    private readonly logger = getLogger(ConnectionHandlers.name);
+
     protected readonly handlers: ((path: string, connection: T) => string | false)[] = [];
 
     constructor(
@@ -120,7 +126,7 @@ export class ConnectionHandlers<T> {
                     return result;
                 }
             } catch (e) {
-                console.error(e);
+                this.logger.error(e);
             }
         }
         if (this.parent) {

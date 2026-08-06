@@ -14,6 +14,8 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
+import { getLogger } from "@MagicIdea/core/logger"
+
 export interface ResolvedConnectionErrorHandlerOptions {
     readonly serverName: string
     /**
@@ -35,6 +37,8 @@ export type ConnectionErrorHandlerOptions = Partial<ResolvedConnectionErrorHandl
 };
 
 export class ConnectionErrorHandler {
+
+    protected readonly logger = getLogger(ConnectionErrorHandler.name);
 
     protected readonly options: ResolvedConnectionErrorHandlerOptions;
     constructor(options: ConnectionErrorHandlerOptions) {
@@ -59,7 +63,7 @@ export class ConnectionErrorHandler {
         const diff = this.restarts[this.restarts.length - 1] - this.restarts[0];
         if (diff <= this.options.restartInterval * 60 * 1000) {
             // eslint-disable-next-line max-len
-            console.error(`The ${this.options.serverName} server crashed ${this.options.maxRestarts} times in the last ${this.options.restartInterval} minutes. The server will not be restarted.`);
+            this.logger.error(`The ${this.options.serverName} server crashed ${this.options.maxRestarts} times in the last ${this.options.restartInterval} minutes. The server will not be restarted.`);
             return false;
         }
         this.restarts.shift();

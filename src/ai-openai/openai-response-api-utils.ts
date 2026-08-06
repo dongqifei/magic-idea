@@ -26,6 +26,7 @@ import {
     ToolRequestParameters,
     UserRequest
 } from '@MagicIdea/ai-core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { CancellationToken, unreachable } from '@MagicIdea/core/common';
 import { Deferred } from '@MagicIdea/core/common';
 import { injectable } from 'inversify';
@@ -61,6 +62,8 @@ interface ToolCall {
  */
 @injectable()
 export class OpenAiResponseApiUtils {
+
+    protected readonly logger = getLogger(OpenAiResponseApiUtils.name);
 
     /**
      * Handles Response API requests with proper tool calling cycles.
@@ -149,7 +152,7 @@ export class OpenAiResponseApiUtils {
             parameters: this.recursiveStrictToolCallParameters(tool.parameters),
             strict: true
         }));
-        console.debug(`Converted ${tools.length} tools for Response API:`, converted.map(t => t.name));
+        this.logger.debug(`Converted ${tools.length} tools for Response API:` + converted.map(t => t.name));
         return converted;
     }
 
@@ -193,7 +196,7 @@ export class OpenAiResponseApiUtils {
                                 };
                             }
                         } else if (event.type === 'error') {
-                            console.error('Response API error:', event.message);
+                            this.logger.error('Response API error:', event.message);
                             throw new Error(`Response API error: ${event.message}`);
                         }
                     }
@@ -311,6 +314,7 @@ export class OpenAiResponseApiUtils {
  * Based on the pattern from openai-streaming-iterator.ts but adapted for Response API.
  */
 class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModelStreamResponsePart> {
+    protected readonly logger = getLogger(ResponseApiToolCallIterator.name);
     protected readonly requestQueue = new Array<Deferred<IteratorResult<LanguageModelStreamResponsePart>>>();
     protected readonly messageCache = new Array<LanguageModelStreamResponsePart>();
     protected done = false;
@@ -382,7 +386,7 @@ class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModel
     protected async startIteration(): Promise<void> {
         try {
             while (this.iteration < this.maxIterations && !this.cancellationToken?.isCancellationRequested) {
-                console.debug(`Starting Response API iteration ${this.iteration} with ${this.currentInput.length} input messages`);
+                this.logger.debug(`Starting Response API iteration ${this.iteration} with ${this.currentInput.length} input messages`);
 
                 await this.processStream();
 
@@ -522,14 +526,14 @@ class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModel
                 break;
 
             case 'error':
-                console.error('Response API error:', event.message);
+                this.logger.error('Response API error:', event.message);
                 throw new Error(`Response API error: ${event.message}`);
         }
     }
 
     protected handleFunctionCallAdded(functionCall: ResponseFunctionToolCall): void {
         if (functionCall.id && functionCall.call_id) {
-            console.debug(`Function call added: ${functionCall.name} with id ${functionCall.id} and call_id ${functionCall.call_id}`);
+            this.logger.debug(`Function call added: ${functionCall.name} with id ${functionCall.id} and call_id ${functionCall.call_id}`);
 
             const toolCall: ToolCall = {
                 id: functionCall.id,
@@ -603,7 +607,7 @@ class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModel
     }
 
     protected handleFunctionCallDone(functionCall: ResponseFunctionToolCall): void {
-        if (!functionCall.id) { console.warn('Unexpected absence of ID for call ID', functionCall.call_id); return; }
+        if (!functionCall.id) { this.logger.warn('Unexpected absence of ID for call ID ' + functionCall.call_id); return; }
         const toolCall = this.currentToolCalls.get(functionCall.id);
         if (toolCall && !toolCall.call_id && functionCall.call_id) {
             toolCall.call_id = functionCall.call_id;
@@ -635,7 +639,7 @@ class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModel
                         }]
                     });
                 } catch (error) {
-                    console.error(`Error executing tool ${toolCall.name}:`, error);
+                    this.logger.error(`Error executing tool ${toolCall.name}:`, error);
                     toolCall.error = error instanceof Error ? error : new Error(String(error));
 
                     // Yield the tool call error
@@ -652,7 +656,7 @@ class ResponseApiToolCallIterator implements AsyncIterableIterator<LanguageModel
                     });
                 }
             } else {
-                console.warn(`Tool ${toolCall.name} not found in request tools`);
+                this.logger.warn(`Tool ${toolCall.name} not found in request tools`);
                 toolCall.error = new Error(`Tool ${toolCall.name} not found`);
 
                 // Yield the tool call error

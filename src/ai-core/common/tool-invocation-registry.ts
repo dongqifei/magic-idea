@@ -17,6 +17,7 @@
 import { inject, injectable, named, postConstruct, interfaces } from 'inversify';
 import { ToolRequest } from './language-model';
 import { ContributionProvider, Emitter, Event } from '@MagicIdea/core/common';
+import { getLogger } from '@MagicIdea/core/logger';
 
 export const ToolInvocationRegistry = Symbol('ToolInvocationRegistry');
 
@@ -83,6 +84,8 @@ export function bindToolProvider(identifier: interfaces.Newable<ToolProvider>, b
 @injectable()
 export class ToolInvocationRegistryImpl implements ToolInvocationRegistry {
 
+    private readonly logger = getLogger(ToolInvocationRegistryImpl.name);
+
     private tools: Map<string, ToolRequest> = new Map<string, ToolRequest>();
 
     private readonly onDidChangeEmitter = new Emitter<void>();
@@ -122,7 +125,7 @@ export class ToolInvocationRegistryImpl implements ToolInvocationRegistry {
 
     registerTool(tool: ToolRequest): void {
         if (this.tools.has(tool.id)) {
-            console.warn(`Function with id ${tool.id} is already registered.`);
+            this.logger.warn(`Function with id ${tool.id} is already registered.`);
         } else {
             this.tools.set(tool.id, tool);
             this.onDidChangeEmitter.fire();

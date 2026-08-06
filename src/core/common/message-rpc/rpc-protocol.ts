@@ -16,6 +16,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { CancellationToken, CancellationTokenSource } from '../index';
+import { getLogger } from '@MagicIdea/core/logger';
 import { DisposableWrapper, Disposable, DisposableCollection } from '../disposable';
 import { Emitter, IEvent as Event } from '../index';
 import { Deferred } from '../promise-util';
@@ -61,6 +62,8 @@ export interface RpcProtocolOptions {
 export class RpcProtocol {
     static readonly CANCELLATION_TOKEN_KEY = 'add.cancellation.token';
 
+    protected readonly logger = getLogger(RpcProtocol.name);
+
     protected readonly pendingRequests: Map<number, Deferred<any>> = new Map();
     protected readonly pendingRequestCancellationEventListeners: Map<number, DisposableWrapper> = new Map();
 
@@ -94,7 +97,7 @@ export class RpcProtocol {
         this.mode = options.mode ?? 'default';
 
         if (this.mode !== 'clientOnly' && requestHandler === undefined) {
-            console.error('RPCProtocol was initialized without a request handler but was not set to clientOnly mode.');
+            this.logger.error('RPCProtocol was initialized without a request handler but was not set to clientOnly mode.');
         }
     }
 
@@ -128,7 +131,7 @@ export class RpcProtocol {
             }
         }
         // If the message was not handled until here, it is incompatible with the mode.
-        console.warn(`Received message incompatible with this RPCProtocol's mode '${this.mode}'. Type: ${message.type}. ID: ${message.id}.`);
+        this.logger.warn(`Received message incompatible with this RPCProtocol's mode '${this.mode}'. Type: ${message.type}. ID: ${message.id}.`);
     }
 
     protected handleReply(id: number, value: any): void {
@@ -138,7 +141,7 @@ export class RpcProtocol {
             replyHandler.resolve(value);
         } else {
             // Late replies for cancelled/timed-out requests are non-critical - just warn
-            console.warn(`No reply handler for reply with id: ${id}`);
+            this.logger.warn(`No reply handler for reply with id: ${id}`);
             return;
         }
         this.disposeCancellationEventListener(id);
@@ -151,7 +154,7 @@ export class RpcProtocol {
             replyHandler.reject(error);
         } else {
             // Late error replies for cancelled/timed-out requests are non-critical - just warn
-            console.warn(`No reply handler for error reply with id: ${id}`);
+            this.logger.warn(`No reply handler for error reply with id: ${id}`);
             return;
         }
         this.disposeCancellationEventListener(id);

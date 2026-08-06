@@ -17,6 +17,7 @@ import { MessagingService } from './messaging-service';
 import * as http from 'http';
 import * as https from 'https';
 import { inject, injectable } from 'inversify';
+import { getLogger } from '../logger';
 import { Server, Socket } from 'socket.io';
 import { WsRequestValidator } from '../ws-request-validators';
 import { MessagingListener } from './messaging-listeners';
@@ -25,6 +26,9 @@ import { BackendApplicationContribution } from '../backend-application';
 
 @injectable()
 export class WebsocketEndpoint implements BackendApplicationContribution {
+
+    protected readonly logger = getLogger(WebsocketEndpoint.name);
+
     @inject(WsRequestValidator)
     protected readonly wsRequestValidator: WsRequestValidator;
 
@@ -82,7 +86,7 @@ export class WebsocketEndpoint implements BackendApplicationContribution {
     protected async handleConnection(socket: Socket): Promise<void> {
         const pathname = socket.nsp.name;
         if (pathname && !this.wsHandlers.route(pathname, socket)) {
-            console.error('Cannot find a ws handler for the path: ' + pathname);
+            this.logger.error('Cannot find a ws handler for the path: ' + pathname);
         }
     }
 }

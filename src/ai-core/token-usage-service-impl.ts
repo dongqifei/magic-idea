@@ -13,13 +13,16 @@
 //
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
-
+import { getLogger } from '@MagicIdea/core/logger';
 import { injectable } from 'inversify';
 import { TokenUsage, TokenUsageParams, TokenUsageService } from './common/token-usage-service';
 import { TokenUsageServiceClient } from './common/protocol';
 
 @injectable()
 export class TokenUsageServiceImpl implements TokenUsageService {
+    
+    protected readonly logger = getLogger(TokenUsageServiceImpl.name);
+
     private client: TokenUsageServiceClient | undefined;
 
     /**
@@ -68,7 +71,7 @@ export class TokenUsageServiceImpl implements TokenUsageService {
             logMessage += `; RequestId: ${params.requestId}`;
         }
 
-        console.debug(logMessage);
+        this.logger.debug(logMessage);
         // For now we just store in memory
         // In the future, this could be persisted to disk, a database, or sent to a service
         return Promise.resolve();

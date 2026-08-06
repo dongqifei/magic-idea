@@ -18,11 +18,15 @@ import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { isLocalMCPServerDescription, isRemoteMCPServerDescription, MCPServerDescription, MCPServerStatus, ToolInformation } from './common';
+import { getLogger } from '@MagicIdea/core/logger';
 import { Emitter } from '@MagicIdea/core/common';
 import { CallToolResult, CallToolResultSchema, ListResourcesResult, ListRootsRequestSchema, ListRootsResult, ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
 import { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 
 export class MCPServer {
+
+    protected readonly logger = getLogger(MCPServer.name);
+
     private description: MCPServerDescription;
     private transport: Transport;
     private client: Client;
@@ -73,7 +77,7 @@ export class MCPServer {
                     description: tool.description
                 }));
             } catch (error) {
-                console.error('Error fetching tools for description:', error);
+                this.logger.error('Error fetching tools for description:', error);
             }
         }
 
@@ -132,7 +136,7 @@ export class MCPServer {
 
         if (isLocalMCPServerDescription(this.description)) {
             this.setStatus(MCPServerStatus.Starting);
-            console.log(
+            this.logger.info(
                 `Starting server "${this.description.name}" with command: ${this.description.command} ` +
                 `and args: ${this.description.args?.join(' ')} and env: ${JSON.stringify(this.description.env)}`
             );
@@ -153,7 +157,7 @@ export class MCPServer {
             });
         } else if (isRemoteMCPServerDescription(this.description)) {
             this.setStatus(MCPServerStatus.Connecting);
-            console.log(`Connecting to server "${this.description.name}" via MCP Server Communication with URL: ${this.description.serverUrl}`);
+            this.logger.info(`Connecting to server "${this.description.name}" via MCP Server Communication with URL: ${this.description.serverUrl}`);
 
             let descHeaders;
             if (this.description.headers) {
@@ -184,9 +188,9 @@ export class MCPServer {
             try {
                 await this.client.connect(this.transport);
                 connected = true;
-                console.log(`MCP Streamable HTTP successful connected: ${this.description.serverUrl}`);
+                this.logger.info(`MCP Streamable HTTP successful connected: ${this.description.serverUrl}`);
             } catch (e) {
-                console.log(`MCP SSE fallback initiated: ${this.description.serverUrl}`);
+                this.logger.info(`MCP SSE fallback initiated: ${this.description.serverUrl}`);
                 await this.client.close();
                 if (descHeaders) {
                     this.transport = new SSEClientTransport(new URL(this.description.serverUrl), {
@@ -206,13 +210,13 @@ export class MCPServer {
             if (this.isStopped()) {
                 return;
             }
-            console.error('Error: ', error);
+            this.logger.error('Error: ', error);
             this.error = 'Error: ' + error;
             this.setStatus(MCPServerStatus.Errored);
         };
 
         this.client.onerror = error => {
-            console.error('Error in MCP client: ', error);
+            this.logger.error('Error in MCP client: ', error);
             this.error = 'Error in MCP client: ' + error;
             this.setStatus(MCPServerStatus.Errored);
         };
@@ -234,7 +238,7 @@ export class MCPServer {
         try {
             args = JSON.parse(arg_string);
         } catch (error) {
-            console.error(
+            this.logger.error(
                 `Failed to parse arguments for calling tool "${toolName}" in MCP server "${this.description.name}".
                 Invalid JSON: ${arg_string}`,
                 error
@@ -270,12 +274,12 @@ export class MCPServer {
             return;
         }
         if (isLocalMCPServerDescription(this.description)) {
-            console.log(`Stopping MCP server "${this.description.name}"`);
+            this.logger.info(`Stopping MCP server "${this.description.name}"`);
             this.setStatus(MCPServerStatus.NotRunning);
         } else {
-            console.log(`Disconnecting MCP server "${this.description.name}"`);
+            this.logger.info(`Disconnecting MCP server "${this.description.name}"`);
             if (this.transport instanceof StreamableHTTPClientTransport) {
-                console.log(`Terminating session for MCP server "${this.description.name}"`);
+                this.logger.info(`Terminating session for MCP server "${this.description.name}"`);
                 await (this.transport as StreamableHTTPClientTransport).terminateSession();
             }
             this.setStatus(MCPServerStatus.NotConnected);

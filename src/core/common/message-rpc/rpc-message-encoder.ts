@@ -123,6 +123,8 @@ export interface RpcMessageEncoder {
 
 export const defaultMsgPack = new MsgPack({ moreTypes: true, encodeUndefinedAsNil: false, bundleStrings: false });
 
+let msgPackExtensionsRegistered = false;
+
 export class MsgPackMessageEncoder implements RpcMessageEncoder {
 
     constructor(protected readonly msgPack: MsgPack = defaultMsgPack) { }
@@ -169,6 +171,10 @@ export class MsgPackMessageDecoder implements RpcMessageDecoder {
 }
 
 export function registerMsgPackExtensions(): void {
+    if (msgPackExtensionsRegistered) {
+        return;
+    }
+
     // Register custom msgPack extension for Errors.
     MsgPackExtensionManager.getInstance().registerExtensions({
         class: Error,
@@ -187,4 +193,8 @@ export function registerMsgPackExtensions(): void {
             return error;
         }
     });
+
+    msgPackExtensionsRegistered = true;
 }
+
+registerMsgPackExtensions();

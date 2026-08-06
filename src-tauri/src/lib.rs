@@ -51,6 +51,19 @@ pub fn quit_application(app: &AppHandle) {
     app.exit(0);
 }
 
+/// 输出服务端日志：同步打印到控制台、写入日志文件，并推送 "server:output" 事件到前端
+/// is_error 为 true 时使用 eprintln/log::error，否则使用 println/log::info
+fn emit_server_output(app_handle: &AppHandle, line: &str, is_error: bool) {
+    if is_error {
+        eprintln!("{}", line);
+        log::error!("{}", line);
+    } else {
+        println!("{}", line);
+        log::info!("{}", line);
+    }
+    app_handle.emit("server:output", line).ok();
+}
+
 #[tauri::command]
 fn open_devtools(app_handle: tauri::AppHandle) {
   if let Some(webview) = app_handle.get_webview_window("main") {
@@ -138,18 +151,23 @@ pub fn run() {
         *guard = Some(child);
       }
 
+      let app_handle_clone = app_handle.clone();
       tauri::async_runtime::spawn(async move {
         while let Some(event) = rx.recv().await {
-          if let CommandEvent::Stdout(line_bytes) = event {
-            let line = String::from_utf8_lossy(&line_bytes);
-            println!("{}", line);
-            
-            // 发送给前端
-            app_handle.emit("server:output", line).ok();
+          match event {
+            CommandEvent::Stdout(line_bytes) => {
+              let line = String::from_utf8_lossy(&line_bytes);
+              emit_server_output(&app_handle_clone, &line, false);
+            }
+            CommandEvent::Stderr(line_bytes) => {
+              let line = String::from_utf8_lossy(&line_bytes);
+              emit_server_output(&app_handle_clone, &line, true);
+            }
+            _ => {}
           }
         }
       });
-      println!("==================启动Node服务端成功=========================");
+      emit_server_output(&app_handle, "==================启动Node服务端成功=========================", false);
 
       Ok(())
     })

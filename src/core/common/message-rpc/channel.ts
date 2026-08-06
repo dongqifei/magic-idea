@@ -15,6 +15,7 @@
 // *****************************************************************************
 
 import { injectable } from 'inversify';
+import { getLogger } from '@MagicIdea/core/logger';
 import { Disposable, DisposableCollection } from '../disposable';
 import { Emitter, IEvent as Event } from '../';
 import { ReadBuffer, WriteBuffer } from './message-buffer';
@@ -154,6 +155,9 @@ export enum MessageTypes {
  * messages and always in one go.
  */
 export class ChannelMultiplexer implements Disposable {
+    
+    protected readonly logger = getLogger(AbstractChannel.name);
+
     private pendingOpen: Map<string, { resolve: (channel: ForwardingChannel) => void, reject: (err: Error) => void }> = new Map();
     protected openChannels: Map<string, ForwardingChannel> = new Map();
 
@@ -225,7 +229,7 @@ export class ChannelMultiplexer implements Disposable {
             pending.resolve(channel);
             this.onOpenChannelEmitter.fire({ id, channel });
         } else {
-            console.error(`not expecting ack-open on for ${id}`);
+            this.logger.error(`not expecting ack-open on for ${id}`);
         }
     }
 
@@ -241,7 +245,7 @@ export class ChannelMultiplexer implements Disposable {
             this.underlyingChannel.getWriteBuffer().writeUint8(MessageTypes.AckOpen).writeString(id).commit();
             this.onOpenChannelEmitter.fire({ id, channel });
         } else {
-            console.error(`channel already open: ${id}`);
+            this.logger.error(`channel already open: ${id}`);
         }
     }
 
