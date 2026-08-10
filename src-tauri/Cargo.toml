@@ -1,6 +1,6 @@
 [package]
 name = "MagicIDEA"
-version = "0.0.12"
+version = "0.0.13"
 description = "一款专为magic-api开发者设计的现代化代码编辑器"
 authors = ["amofly"]
 license = ""
