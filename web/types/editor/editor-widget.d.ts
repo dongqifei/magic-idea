@@ -1,0 +1,31 @@
+import { IEvent as Event, DisposableCollection } from '..\core\common';
+import { Saveable, SaveableSource, SelectionService } from '..\core';
+import { BaseWidget } from '..\core\widgets';
+import { Navigatable } from '..\core';
+import URI from '..\core\common\uri';
+import { Message } from "@lumino/messaging";
+import { TextEditor } from "./text-editor";
+import { Widget, TabBar } from "@lumino/widgets";
+export declare class EditorWidget extends BaseWidget implements SaveableSource, Navigatable {
+    readonly editor: TextEditor;
+    protected readonly selectionService: SelectionService;
+    protected toDisposeOnTabbarChange: DisposableCollection;
+    protected currentTabbar: TabBar<Widget> | undefined;
+    constructor(editor: TextEditor, selectionService: SelectionService);
+    isExtractable: boolean;
+    secondaryWindow: Window | undefined;
+    setSelection(): void;
+    protected handleVisiblityChanged(isNowVisible: boolean): void;
+    get saveable(): Saveable;
+    getResourceUri(): URI | undefined;
+    createMoveToUri(resourceUri: URI): URI | undefined;
+    protected onActivateRequest(msg: Message): void;
+    protected onAfterAttach(msg: Message): void;
+    protected checkForTabbarChange(): void;
+    protected handleTabBarChange(oldTabBar?: TabBar<Widget>, newTabBar?: TabBar<Widget>): void;
+    protected onAfterShow(msg: Message): void;
+    protected onResize(msg: Widget.ResizeMessage): void;
+    storeState(): object | undefined;
+    restoreState(oldState: object): void;
+    get onDispose(): Event<void>;
+}

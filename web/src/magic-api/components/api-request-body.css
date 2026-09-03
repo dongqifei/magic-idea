@@ -1,0 +1,13 @@
+.api-request-body-editor {
+  width: 100%;
+  height: calc(100% - 4px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editor-container {
+  flex: 1;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}

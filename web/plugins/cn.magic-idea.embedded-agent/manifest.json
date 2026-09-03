@@ -1,0 +1,10 @@
+{
+  "label": "智能助手",
+  "name": "cn.magic-idea.embedded-agent",
+  "url": "/plugins/cn.magic-idea.embedded-agent/index.js",
+  "icon": "/plugins/cn.magic-idea.embedded-agent/assets/icon.png",
+  "version": "0.0.1",
+  "author": "amofly",
+  "description": "通过内嵌的方式使用第三方智能体平台发布的智能体。",
+  "requireRestart": true
+}

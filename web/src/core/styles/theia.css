@@ -1,0 +1,92 @@
+:root {
+  --theia-editor-background: var(--magic-idea-editor-background);
+  --theia-editorWidget-background: var(--magic-idea-background);
+  --theia-ui-padding: 6px;
+  --theia-ui-font-size0: 12px;
+  --theia-ui-font-size1: 13px;
+  --theia-ui-font-size2: 14px;
+  --theia-ui-font-size3: 18px;
+  --theia-ui-font-family: var(--magic-idea-ui-font-family);
+  --theia-foreground: var(--magic-idea-foreground);
+  --theia-icon-foreground: var(--magic-idea-foreground);
+  --theia-descriptionForeground: var(--magic-idea-description-foreground);
+  --theia-widget-border: var(--magic-idea-border-color);
+  --theia-panel-border: var(--magic-idea-border-color);
+  --theia-border-width: 1px;
+  --theia-editorHoverWidget-border: var(--magic-idea-border-color);
+  --theia-editorHoverWidget-background: var(--magic-idea-editor-background);
+  --theia-editorHoverWidget-foreground: var(--magic-idea-foreground);
+  --theia-button-foreground: var(--magic-idea-button-foreground);
+  --theia-button-background: var(--magic-idea-button-background);
+  --theia-radio-inactiveHoverBackground: var(--magic-idea-list-hoverBackground);
+  --theia-list-hoverBackground: var(--magic-idea-list-hoverBackground);
+  --theia-list-hoverForeground: var(--magic-idea-list-hoverForeground);
+  --theia-list-activeSelectionBackground: var(--magic-idea-list-inactiveSelectionBackground);
+  --theia-list-activeSelectionForeground: var(--magic-idea-foreground);
+  --theia-ansi-red-color: var(--magic-idea-error-color);
+  --theia-ansi-green-color: var(--magic-idea-success-color);
+  --theia-charts-green: var(--magic-idea-success-color);
+  --theia-successForeground: var(--magic-idea-success-color);
+  --theia-warningForeground: var(--magic-idea-warning-color);
+  --theia-errorForeground: var(--magic-idea-error-color);
+  --theia-inputValidation-infoForeground: var(--magic-idea-primary-color);
+  --theia-activityBarBadge-background: var(--magic-idea-info-color);
+  --theia-focusBorder: var(--magic-idea-focus-border);
+  --theia-inputOption-activeBorder: var(--magic-idea-focus-border);
+  --theia-inputOption-activeBackground: var(--magic-idea-list-inactiveSelectionBackground);
+  --theia-list-inactiveSelectionBackground: var(--magic-idea-list-inactiveSelectionBackground);
+  --theia-list-inactiveSelectionForeground: var(--magic-idea-foreground);
+}
+
+@keyframes theia-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.theia-animation-spin {
+  animation: theia-spin 1.5s linear infinite;
+}
+
+.theia-button {
+    border: none;
+    color: var(--magic-idea-button-foreground);
+    min-width: 65px;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 9px;
+    margin-left: calc(var(--theia-ui-padding));
+    border-radius: 2px;
+    background-color: var(--magic-idea-button-background);
+}
+
+.theia-button:hover {
+    background-color: var(--magic-idea-button-hover-background);
+}
+
+.theia-button:focus {
+    outline: 1px solid var(--magic-idea-focus-border);
+    outline-offset: 1px;
+}
+
+.theia-button.secondary {
+    color: var(--magic-idea-button-secondary-foreground);
+    background-color: var(--magic-idea-button-secondary-background);
+}
+
+.theia-button.secondary:hover {
+    background-color: var(--magic-idea-button-secondary-hoverBackground);
+}
+
+.theia-button[disabled] {
+    opacity: 0.6;
+    color: var(--magic-idea-button-foreground);
+    background-color: var(--magic-idea-button-background);
+    cursor: default;
+}
+
+button.secondary[disabled],
+.theia-button.secondary[disabled] {
+    color: var(--magic-idea-button-secondary-foreground);
+    background-color: var(--magic-idea-button-secondary-background);
+}

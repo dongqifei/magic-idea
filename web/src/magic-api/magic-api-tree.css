@@ -1,0 +1,99 @@
+.magic-api-tree {
+    height: 100%;
+}
+
+.magic-api-tree .tree-container {
+    min-height: 100% !important;
+    /* overflow: visible !important; */
+}
+
+.magic-api-tree .tree-node {
+    height: 100%;
+    display: flex;
+}
+
+.magic-api-tree .tree-container .tree-node:hover {
+    background: var(--magic-idea-list-hoverBackground);
+    /* color: var(--magic-idea-list-hoverForeground); */
+    cursor: pointer;
+}
+
+.magic-api-resource-widget {
+    z-index: 3 !important;
+}
+
+.magic-api-resource-widget:focus-within .tree-container .tree-node.selected {
+    outline: var(--magic-idea-focus-border) solid 1px;
+    outline-offset: -1px;
+}
+
+.magic-api-resource-widget:focus-within:not(:has(.tree-node.selected)) {
+    outline: var(--magic-idea-focus-border) solid 1px;
+}
+
+.magic-api-tree .tree-container .tree-node .node-item {
+    flex: 1;
+}
+
+.magic-api-tree .tree-container .tree-node .node-icon .codicon,
+.magic-api-tree .tree-container .tree-node .node-icon .fa {
+    font-size: 14px;
+}
+
+.magic-api-tree .tree-container .tree-node span {
+    line-height: 24px;
+}
+
+.magic-api-tree .tree-container .tree-node .node-item {
+    min-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.magic-api-tree .tree-container .tree-node .node-item .api-node-info {
+    margin-left: 4px;
+    color: var(--magic-idea-description-foreground);
+}
+
+.magic-api-tree .tree-container .tree-node .node-item .api-node-info .api-method {
+    font-size: 10px;
+}
+
+.magic-api-tree .tree-container .tree-node .node-operate {
+    margin-right: 10px;
+    opacity: 0.6;
+}
+
+.magic-api-tree .tree-container .tree-node.lastSelected {
+    background: var(--magic-idea-list-hoverBackground);
+    color: var(--magic-idea-list-hoverForeground);
+}
+
+.magic-api-tree .tree-container .tree-node.selected {
+    background: var(--magic-idea-list-inactiveSelectionBackground);
+    color: var(--magic-idea-list-inactiveSelectionForeground);
+}
+
+.magic-api-tree .tree-container .tree-node.not-selectable {
+    color: var(--magic-idea-descriptionForeground);
+}
+
+.magic-api-tree .tree-container .tree-node.not-selectable:hover {
+    background: none;
+    cursor: default;
+}
+
+/* 允许放置的悬停状态 */
+.magic-api-tree .tree-node.drag-over-allowed {
+    background: rgba(76, 175, 80, 0.15) !important;
+    outline: #4CAF50 dashed 1px;
+    outline-offset: -1px;
+}
+
+/* 禁止放置的悬停状态 */
+.magic-api-tree .tree-node.drag-over-denied {
+    background: rgba(211, 47, 47, 0.1);
+    outline: #d32f2f dashed 1px;
+    outline-offset: -1px;
+}

@@ -1,0 +1,89 @@
+.preference-view{
+  display: flex;
+  height: 450px;
+  gap: 4;
+}
+
+.preference-view .preference-tree{
+  height: 100%;
+  width: 220px;
+}
+
+.preference-view .preference-tree div[role="tree"]:focus:focus-within{
+  outline: var(--magic-idea-focus-border) solid 1px;
+  z-index: 1;
+  position: fixed;
+}
+
+.preference-view .preference-tree .search-container{
+  margin-bottom: 8px;
+}
+
+.preference-view .preference-tree .tree-node .node-content {
+  cursor: pointer;
+  padding-inline: 6px;
+  line-height: 24px;
+}
+
+.preference-view .preference-tree .tree-node .node-content .codicon::before{
+  vertical-align: -2px;
+}
+
+/* 树节点样式增强 */
+.preference-view .preference-tree .section-node .node-content {
+  font-weight: 400;
+}
+
+.preference-view .preference-tree .tree-node {
+  height: 100%;
+}
+
+.preference-view .preference-tree .tree-node .match-highlight{
+  color: var(--magic-idea-quickinput-hlightForeground);
+}
+
+.preference-view .preference-tree .tree-node.selected {
+  background: var(--magic-idea-list-inactiveSelectionBackground);
+  border-radius: 4px;
+}
+
+.preference-view .preference-tree .node-count {
+  padding: 0px 6px;
+  color: var(--magic-idea-description-foreground);
+}
+
+.preference-view .preference-form{
+  flex: 1;
+  overflow: auto;
+  padding-inline: 12px;
+  width: 100%;
+}
+
+.preference-view .preference-form .preference-form-title{
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.preference-view .preference-form .submit-btn {
+  background: var(--magic-idea-primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.preference-view .preference-form .submit-btn:hover {
+  opacity: 0.9;
+}
+
+/* 空状态样式 */
+.preference-view .preference-form .empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--magic-idea-secondary-foreground);
+  font-size: 14px;
+}

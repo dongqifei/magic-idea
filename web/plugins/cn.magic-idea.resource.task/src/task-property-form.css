@@ -1,0 +1,60 @@
+.task-property-form {
+  height: 100%;
+  overflow: auto;
+}
+
+.task-property-form .form-container{
+  height: 100%;
+}
+
+.task-property-form .form-content {
+  display: flex;
+  gap: 12px;
+  padding-block: 6px;
+}
+
+.task-property-form .form-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-property-form .form-label {
+  text-align: right;
+  min-width: 80px;
+}
+
+.task-property-form .form-control-wrapper {
+  flex: 1;
+}
+
+.task-property-form .param-table-section {
+  width: 100%;
+  height: calc(100% - 42px);
+  border-top: 1px solid var(--magic-idea-border-color);
+}
+
+.task-property-form .param-table-section .form-control-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+
+.task-property-form .btn-next-runs{
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  padding: 4px;
+  border-radius: 2px;
+  min-width: 85px;
+  max-width: 160px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  background-color: transparent;
+  color: var(--magic-idea-link-color);
+}
+
+.task-property-form .btn-next-runs:hover{
+  color: var(--magic-idea-button-hover-background);
+}

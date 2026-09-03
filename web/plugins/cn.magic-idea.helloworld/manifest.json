@@ -1,0 +1,10 @@
+{
+  "label": "HelloWorld",
+  "name": "cn.magic-idea.helloworld",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.helloworld/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.helloworld/assets/icon.png",
+  "version": "1.0.0",
+  "description": "用于演示 MagicIdea 插件系统的基本功能。",
+  "author": "amofly",
+  "requireRestart": true
+}

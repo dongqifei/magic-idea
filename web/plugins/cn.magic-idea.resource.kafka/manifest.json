@@ -1,0 +1,10 @@
+{
+  "label": "Kafka",
+  "name": "cn.magic-idea.resource.kafka",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.resource.kafka/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.resource.kafka/assets/icon.png",
+  "version": "1.0.0",
+  "description": "管理Kafka消息队列资源信息",
+  "author": "amofly",
+  "requireRestart": true
+}

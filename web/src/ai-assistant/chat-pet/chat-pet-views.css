@@ -1,0 +1,124 @@
+.pet-container {
+  position: fixed;
+  z-index: 10000;
+  user-select: none;
+  cursor: grab;
+}
+
+.pet-container:active {
+  cursor: grabbing;
+}
+
+.pet-container .pet-sprite {
+  --pet-scale: 0.4;
+  --sprite-row: 0;
+  --sprite-frames: 6;
+  --sprite-duration: 1.1s;
+
+  width: calc(192px * var(--pet-scale));
+  height: calc(208px * var(--pet-scale));
+
+  /* 行偏移：也要按比例缩小 */
+  --sprite-y: calc(var(--sprite-row) * -208px * var(--pet-scale));
+  --sprite-end-x: calc(var(--sprite-frames) * -192px * var(--pet-scale));
+
+  background-image: var(--sprite-url);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+
+  /* 背景尺寸也要缩小！ */
+  background-size: calc(1536px * var(--pet-scale)) calc(1872px * var(--pet-scale));
+
+  /* 动画不变 */
+  animation: pet-state var(--sprite-duration) steps(var(--sprite-frames)) infinite;
+}
+
+/* 气泡外层 */
+.pet-container .pet-bubbles {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-70%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* 气泡主体 */
+.pet-bubbles .pet-bubble-item {
+  width: 150px;
+  background: var(--magic-idea-background);
+  color: var(--magic-idea-foreground);
+  border-radius: 12px;
+  padding: 8px 10px;
+  box-shadow: 0 2px 2px var(--magic-idea-shadow);
+  animation: pet-fadeIn 0.3s forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 标题栏：左右布局 */
+.pet-bubbles .pet-bubble-item .bubble-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* 内容区域 */
+.pet-bubbles .pet-bubble-item .bubble-content {
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 标题左侧文字 */
+.pet-bubbles .pet-bubble-item .title-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* 标题右侧状态 */
+.pet-bubbles .pet-bubble-item .title-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* loading 动画点点 */
+.pet-bubbles .pet-bubble-item .loading-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #60a5fa;
+  animation: pet-loadingDot 1s infinite alternate;
+}
+
+@keyframes pet-loadingDot {
+  from { opacity: 0.3; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pet-fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pet-state {
+  from {
+    background-position: 0 var(--sprite-y);
+  }
+  to {
+    background-position: var(--sprite-end-x) var(--sprite-y);
+  }
+}

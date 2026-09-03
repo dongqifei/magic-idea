@@ -1,0 +1,25 @@
+
+/* 编辑器css */
+.monaco-editor .minimap {
+  z-index: 1 !important; 
+}
+
+.monaco-editor .debug-breakpoint-enabled {
+  cursor: pointer;
+  color: var(--magic-idea-debugIcon-breakpointForeground);
+}
+
+.monaco-editor .debug-breakpoint-disabled {
+  cursor: pointer;
+  color: #848484;
+}
+
+.monaco-editor .debug-breakpoint-hover {
+  cursor: pointer;
+  color: var(--magic-idea-debugIcon-breakpointForeground);
+  opacity: 0.4 !important;
+}
+
+.monaco-editor .debug-line {
+  background: var(--magic-idea-debug-breakpointLineBackground);
+}

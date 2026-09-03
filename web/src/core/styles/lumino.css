@@ -1,0 +1,342 @@
+.lm-Widget {
+  contain: none !important;
+}
+
+.lm-DockPanel,
+.lm-SplitPanel-child,
+.lm-DockPanel-widget {
+  z-index: inherit; /*避免 dockpanel 层级问题*/
+}
+
+.lm-DockPanel-overlay {
+  contain: none !important;
+}
+
+.lm-Menu {
+  background: var(--magic-idea-menu-background);
+  color: var(--magic-idea-menu-foreground);
+  border: 1px solid var(--magic-idea-input-border);
+  padding: 4px;
+  border-radius: 4px;
+  font-size: var(--magic-idea-ui-font-size);
+  font-family: var(--magic-idea-ui-font-family);
+  box-shadow: 0 2px 8px var(--magic-idea-shadow);
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item {
+  cursor: pointer;
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item .lm-Menu-itemSubmenuIcon {
+  border-top-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 0
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item .lm-Menu-itemIcon {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 4px
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item:not(.lm-mod-active) .lm-Menu-itemShortcut {
+  color: var(--magic-idea-secondary-foreground);
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item[data-type='separator']>div::after {
+  border-top: 1px solid var(--magic-idea-input-border);
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item.lm-mod-active {
+  background: var(--magic-idea-menu-hoverBackground);
+  color: var(--magic-idea-menu-hoverForeground);
+}
+
+.lm-Menu .lm-Menu-content .lm-Menu-item[aria-disabled='true'] {
+  color: var(--magic-idea-description-foreground);
+}
+
+
+.lm-SplitPanel-handle{
+  background-color: var(--magic-idea-border-color);
+  z-index: 2;
+}
+.lm-SplitPanel[data-orientation='vertical']> .lm-SplitPanel-handle:hover,
+.lm-SplitPanel[data-orientation='vertical']> .lm-SplitPanel-handle:after {
+  min-height: 4px;
+}
+
+.lm-SplitPanel[data-orientation='horizontal']> .lm-SplitPanel-handle:after {
+  min-width: 4px;
+}
+
+.lm-SplitPanel-handle:hover::after{
+  background-color: var(--magic-idea-primary-color);
+  transition-delay: 100ms;
+}
+
+.lm-SplitPanel-handle:active::after{
+  background-color: var(--magic-idea-primary-color);
+  transition-delay: 0s !important;
+}
+
+.lm-DockPanel-handle{
+  background-color: var(--magic-idea-border-color);
+  min-height: 2px;
+  min-width: 2px;
+}
+
+.lm-DockPanel-handle[data-orientation='vertical']:active,
+.lm-DockPanel-handle[data-orientation='vertical']:hover {
+  min-height: 4px;
+}
+
+.lm-DockPanel-handle[data-orientation='horizontal']:active,
+.lm-DockPanel-handle[data-orientation='horizontal']:hover{
+  min-width: 4px;
+}
+
+.lm-DockPanel-handle:hover {
+  background-color: var(--magic-idea-primary-color);
+  transition-delay: 300ms;
+}
+.lm-DockPanel-handle:active {
+  background-color: var(--magic-idea-primary-color);
+  transition-delay: 0s !important;
+}
+
+.lm-DockPanel-overlay {
+  background: var(--magic-idea-background-overlay);
+  border: 1px dashed var(--magic-idea-border-color);
+  z-index: 99;
+}
+
+.lm-TabBar[data-orientation="horizontal"] .theia-tabBar-tab-row {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+}
+
+.lm-TabBar-content-container {
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+
+.lm-Menu-itemIcon{
+  padding: 4px 2px;
+}
+
+.lm-Menu-itemSubmenuIcon { 
+  padding: 4px 6px;
+}
+
+.lm-Menu-itemIcon::before, .lm-Menu-itemSubmenuIcon::before {
+  font-family: codicon;
+  font-size: 15px;
+  vertical-align: -2px;
+}
+
+.lm-TabBar-tab.lm-mod-closable > .lm-TabBar-tabCloseIcon:before {
+  /* content: "\ea76"; */
+  font-family: codicon;
+  font-size: 15px;
+  /* vertical-align: -2px; */
+}
+
+.lm-Menu-item.lm-mod-toggled > .lm-Menu-itemIcon::before {
+  content: "\eab2";
+}
+
+.lm-Menu-item[data-type='submenu'] > .lm-Menu-itemSubmenuIcon::before {
+  content: "\eab6";
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title {
+  padding: 0px 18px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 13px;
+  min-height: 24px;
+  max-height: 24px;
+  line-height: 22px;
+  font-weight: 600;
+  display: flex;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title .lm-AccordionPanel-titleCollapser:before {
+    content: '\eab6';
+    font-family: codicon;
+    left: 5px;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title.lm-mod-expanded .lm-AccordionPanel-titleCollapser:before {
+    content: '\eab4';
+    font-family: codicon;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title .lm-AccordionPanel-titleToolbar{
+  position: absolute;
+  right: 8px;
+  display: none;
+  flex: 1;
+  gap: 2px;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title.lm-mod-expanded .lm-AccordionPanel-titleToolbar{
+  display: flex;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title:not(.lm-mod-expanded) {
+  border-bottom: 1px solid var(--magic-idea-border-color);
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title:focus, .lm-AccordionPanel .lm-AccordionPanel-title:last-of-type:focus:not(.lm-mod-expanded) {
+  border: 1px solid var(--magic-idea-focus-border);
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title:focus, .lm-AccordionPanel .lm-AccordionPanel-title:hover {
+  cursor: pointer;
+  background: transparent;
+}
+
+.lm-AccordionPanel .lm-AccordionPanel-title:last-of-type:not(.lm-mod-expanded) {
+  border-bottom: 1px solid transparent;
+  border-bottom-right-radius: var(--magic-idea-border-radius);
+  border-bottom-left-radius: var(--magic-idea-border-radius);
+}
+
+.lm-TabBar-button.lm-mod-hidden {
+  display: none !important;
+}
+
+.lm-TabBar-wrapper {
+  /* Remove wrapper from DOM when scrolling is not enabled */
+  display: contents;
+  /* --lm-tabbar-scrollshadow-end: rgba(0, 0, 0, 0.3); */
+  position: relative;
+  flex: 1;
+  padding-inline: 4px;
+}
+
+.lm-TabBar.lm-mod-scrollable .lm-TabBar-wrapper {
+  /* Keep wrapper in DOM when scrolling is enabled */
+  display: block;
+}
+
+.lm-TabBar-content {
+  scrollbar-width: none;
+}
+
+.lm-TabBar-content::-webkit-scrollbar {
+  display: none;
+}
+
+.lm-TabBar[data-orientation='horizontal'].lm-mod-scrollable
+  > .lm-TabBar-wrapper {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.lm-TabBar[data-orientation='vertical'].lm-mod-scrollable > .lm-TabBar-wrapper {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.lm-TabBar > .lm-TabBar-wrapper > .lm-TabBar-content {
+  width: 100%;
+}
+
+.lm-TabBar[data-orientation='horizontal'].lm-mod-scrollable
+  > .lm-TabBar-wrapper
+  > .lm-TabBar-content {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.lm-TabBar[data-orientation='vertical'].lm-mod-scrollable
+  > .lm-TabBar-wrapper
+  > .lm-TabBar-content {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.lm-TabBar-wrapper::before,
+.lm-TabBar-wrapper::after {
+  content: '';
+  z-index: 10000;
+  display: none;
+  position: absolute;
+}
+
+.lm-TabBar-wrapper[data-can-scroll='before']::before {
+  display: block;
+}
+
+.lm-TabBar-wrapper[data-can-scroll='after']::after {
+  display: block;
+}
+
+.lm-TabBar-wrapper[data-can-scroll='both']::before,
+.lm-TabBar-wrapper[data-can-scroll='both']::after {
+  display: block;
+}
+
+.lm-TabBar[data-orientation='horizontal'] > .lm-TabBar-wrapper::before,
+.lm-TabBar[data-orientation='horizontal'] > .lm-TabBar-wrapper::after {
+  width: 5px;
+  height: 100%;
+  top: 0;
+}
+
+.lm-TabBar[data-orientation='horizontal'] > .lm-TabBar-wrapper::before {
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0),
+    var(--lm-tabbar-scrollshadow-end)
+  );
+  left: 0;
+}
+
+.lm-TabBar[data-orientation='horizontal'] > .lm-TabBar-wrapper::after {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    var(--lm-tabbar-scrollshadow-end)
+  );
+  right: 0;
+}
+
+.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-wrapper::before,
+.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-wrapper::after {
+  height: 5px;
+  width: 100%;
+  left: 0;
+}
+
+.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-wrapper::before {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0),
+    var(--lm-tabbar-scrollshadow-end)
+  );
+  top: 0;
+}
+
+.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-wrapper::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    var(--lm-tabbar-scrollshadow-end)
+  );
+  bottom: 0;
+}
+
+.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-scrollButton {
+  transform: rotate(90deg);
+}

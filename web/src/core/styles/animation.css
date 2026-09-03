@@ -1,0 +1,48 @@
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes progress {
+  0% {
+    width: 10px;
+    margin-left: 0px;
+    transform: translateX(-100%);
+  }
+  50% {
+    width: 50px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  100% {
+    width: 10px;
+    margin-left: 100%;
+    transform: translateX(0%);
+  }
+}
+
+.spinning {
+  animation: spin 5s linear infinite;
+}
+
+/* 核心：推进+消失+循环加载条 */
+.magic-progress-container {
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  position: absolute;
+  /* inset: auto 0 0 0; */
+}
+
+.magic-progress-container::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--magic-idea-primary-color);
+  animation: progress 5s linear infinite;
+}
+
+.progress-ten::before {
+  animation: progress 10s linear infinite;
+}

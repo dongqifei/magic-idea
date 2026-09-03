@@ -1,0 +1,105 @@
+:root {
+    /* 主题字体 */
+    --magic-idea-ui-font-size: 14px;
+    --magic-idea-ui-font-family: Segoe WPC,Segoe UI,sans-serif;
+     /* 文本颜色 */
+    --magic-idea-foreground: #616161;
+    /* 次要文本颜色 */
+    --magic-idea-secondary-foreground: #858585;
+    /* 深黑文本，提升可读性 */
+    --magic-idea-description-foreground: #595959;
+    /* 功能色（更饱和的高亮色） */
+    --magic-idea-primary-color: #0078d4;
+    /* 主色 */
+    --magic-idea-info-color: #0078d4;
+    /* 信息蓝（更亮） */
+    --magic-idea-success-color: #009933;
+    /* 成功绿（更饱和） */
+    --magic-idea-warning-color: #ff9900;
+    /* 警告黄（更鲜艳） */
+    --magic-idea-error-color: #cc0000;
+    /* 错误红（高饱和） */
+
+    /* 背景色 */
+    --magic-idea-background: #f7f8fa;
+    
+    /* 主要按钮文本颜色 */
+    --magic-idea-link-color: #4e94ce;/* 链接深蓝色，更醒目 */
+    /* 按钮颜色 */
+    --magic-idea-button-foreground: #ffffff;
+    --magic-idea-button-primary-foreground: #ffffff;
+    /* 按钮浅灰背景 */
+    --magic-idea-button-background: #0078d4;
+    /* 按钮背景 */
+    --magic-idea-button-hover-background: #0062a3;
+    /* hover时更深 */
+    --magic-idea-button-primary-background: #0066cc;
+    /* 主按钮亮蓝色 */
+    --magic-idea-button-primary-hover-background: #0052a3;
+    /* 主按钮hover暗化 */
+
+    /* 边框与分隔线 */
+    --magic-idea-border-color: #ebecf0;
+    /* 浅灰边框，更柔和 */
+    --magic-idea-focus-border: #0078d4;
+    /* 聚焦边框用主色调，更明显 */
+
+    /* 图标颜色 */
+    --magic-idea-icon-foreground: #333333;
+    /* 图标深灰，更清晰 */
+    
+    /* 菜单背景颜色 */
+    --magic-idea-menu-background: #f7f8fa;
+    --magic-idea-menu-foreground: #1a1a1a;
+    --magic-idea-menu-hoverForeground: #ffffff;
+    --magic-idea-menu-hoverBackground: #0078d4;
+
+    /* 工具栏 */
+    --magic-idea-toolbar-hoverBackground: rgba(184, 184, 184, 0.31);
+
+    /** Tab 栏 */
+    --magic-idea-tabbar-background: #f7f8fa;
+    --magic-idea-tabbar-foreground: #1a1a1a;
+    --magic-idea-tabbar-hoverBackground: #f3f3f3;
+    --magic-idea-tabbar-lastActiveBackground: #fcfcfc;
+    --magic-idea-tabbar-activeBackground: #ffffff;
+
+    /* 编辑器背景色 */
+    --magic-idea-editor-background: #ffffff;
+    --magic-idea-debugIcon-breakpointForeground: #e51400;
+
+    /** 输入框 */
+    --magic-idea-input-background: #ffffff;
+    --magic-idea-input-foreground: #1a1a1a;
+
+    /** 侧边栏 */
+    --magic-idea-sideTabbar-width: 48px;
+    --magic-idea-sideTabbar-background: #f7f8fa;
+    --magic-idea-activityBar-width: 48px;
+    --magic-idea-activityBar-background: #f3f3f3;
+    --magic-idea-activityBar-activeBorder: var(--magic-idea-primary-color);
+    --magic-idea-sideBar-titleColor: var(--magic-idea-foreground);
+    --magic-idea-sidebar-background: #f7f8fa;
+    
+    /** 列表 */
+    --magic-idea-list-activeSelectionBackground: #0060c0;
+    --magic-idea-list-activeSelectionForeground: #ffffff;
+    --magic-idea-list-inactiveSelectionBackground: #e4e6f1;
+    --magic-idea-list-hoverBackground: #e8e8e8;
+    --magic-idea-list-hoverForeground: #616161;
+    --magic-idea-descriptionForeground: #717171;
+
+    /* 通知颜色 */
+    --magic-idea-notification-background: #fefefe;
+    --magic-idea-notification-hoverBackground: #fafafa;
+
+    --magic-idea-statusbar-background: #bf8803;
+    --magic-idea-statusbar-hoverBackground: rgba(255, 255, 255, 0.3);
+    --magic-idea-statusbar-foreground: #ffffff;
+
+    /* 快速输入颜色 */
+    --magic-idea-quickinput-selectionBackground: #0060c0;
+    --magic-idea-quickinput-selectionForeground: #ffffff;
+    --magic-idea-quickinput-hoverBackground: rgba(255, 255, 255, 0.3);
+    --magic-idea-quickinput-hlightForeground: #0078d4;
+}

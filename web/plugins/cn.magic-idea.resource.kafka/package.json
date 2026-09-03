@@ -1,0 +1,9 @@
+{
+  "name": "@plugins/cn.magic-idea.resource.kafka",
+  "main": "src/index.ts",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "magic-idea": "file:../../types"
+  }
+}

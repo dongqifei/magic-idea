@@ -1,0 +1,117 @@
+// 定义变量
+@log-text-color: var(--magic-idea-description-foreground);
+@log-border-color: var(--magic-idea-border-color);
+@log-hover-bg: var(--magic-idea-list-hoverBackground);
+@log-link-color: var(--magic-idea-primary-color);
+
+#magic-idea-tool-item-output-sourceType-select{
+  max-width: 160px !important;
+}
+
+// 基础布局
+.magic-console-wrapper {
+  // 使用CSS变量
+  --log-text-color: @log-text-color;
+  --log-border-color: @log-border-color;
+  --log-hover-bg: @log-hover-bg;
+  --log-link-color: @log-link-color;
+  
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: transparent;
+  line-height: 1.5;
+
+  .console-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    color: var(--magic-idea-secondary-foreground);
+  }
+  // 日志项样式
+  .log-item {
+    padding: 4px 8px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--log-hover-bg);
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: JetBrainsMono,Consolas,Courier New,\5fae\8f6f\96c5\9ed1;
+    }
+
+    // 多行日志折叠
+    &.multiple pre {
+      overflow: hidden;
+      &.more {
+        max-height: none;
+        mask-image: none;
+      }
+    }
+  }
+
+  // 日志级别颜色
+  .log-ERROR { color: var(--magic-idea-error-color); }
+  .log-WARN { color: var(--magic-idea-warning-color); }
+  .log-INFO { color: var(--magic-idea-info-color); }
+  .log-DEBUG { color: var(--magic-idea-success-color); }
+  .log-TRACE { color: var(--magic-idea-secondary-foreground); }
+
+  // 特殊文本高亮
+  .log-cyan { color: #00c8e1; }
+  .log-gray { color: #757575; }
+
+  // 链接样式
+  .log-link {
+    color: var(--log-link-color);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  // 多行切换按钮
+  .log-toggle {
+    display: inline-block;
+    margin-top: 2px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // 时间戳样式
+  .log-timestamp {
+    color: #757575;
+  }
+
+  // 异常堆栈样式
+  .log-stacktrace {
+    color: #b00020;
+    padding-left: 20px;
+
+    &-line {
+      display: block;
+      margin: 2px 0;
+    }
+  }
+}

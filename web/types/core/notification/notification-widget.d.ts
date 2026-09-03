@@ -1,0 +1,32 @@
+import { Widget } from '@lumino/widgets';
+import { NotificationService } from './notification-service';
+import { IStatusBarService } from '../statusbar';
+import "./notification-styles.css";
+export declare class NotificationCenterWidget extends Widget {
+    private notificationService;
+    private statusBarService;
+    private completeNotifications;
+    private standaloneNotifications;
+    private completeLayout;
+    private standaloneLayout;
+    private header;
+    private completePanel;
+    private standalonePanel;
+    private countElement;
+    private readonly disposables;
+    private cursorItemUpdate?;
+    private isPanelVisible;
+    private readonly MAX_STANDALONE_COUNT;
+    constructor(notificationService: NotificationService, statusBarService: IStatusBarService);
+    private updateNotificationMessage;
+    private togglePanelVisibility;
+    private moveStandaloneNotificationsToPanel;
+    private createHeader;
+    private updateNotificationCount;
+    private addNotification;
+    private showNotificationAsComplete;
+    private showNotificationAsStandalone;
+    private removeNotification;
+    private removeWidgetWithAnimation;
+    dispose(): void;
+}

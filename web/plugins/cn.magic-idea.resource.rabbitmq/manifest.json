@@ -1,0 +1,10 @@
+{
+  "label": "RabbitMQ",
+  "name": "cn.magic-idea.resource.rabbitmq",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.resource.rabbitmq/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.resource.rabbitmq/assets/icon.png",
+  "version": "1.0.0",
+  "description": "管理RabbitMQ消息队列资源信息",
+  "author": "amofly",
+  "requireRestart": true
+}

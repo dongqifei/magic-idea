@@ -1,0 +1,14 @@
+{
+  "name": "@plugins/cn.magic-idea.code-formatter",
+  "main": "src/index.tsx",
+  "version": "1.0.1",
+  "description": "Code formatter using js-beautify",
+  "private": true,
+  "scripts": {
+    "sync:declaration": "MagicIdea declaration github"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "react": "18.2.0"
+  }
+}

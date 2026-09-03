@@ -1,0 +1,189 @@
+.api-property-form {
+  height: 100%;
+  overflow: auto;
+}
+
+.api-property-form .form-container{
+  height: 100%;
+}
+
+.api-property-form .form-content {
+  display: flex;
+  gap: 12px;
+  padding-block: 6px;
+}
+
+.api-property-form .form-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.api-property-form .form-label {
+  text-align: right;
+  min-width: 80px;
+}
+
+.api-property-form .form-control-wrapper {
+  flex: 1;
+}
+
+/* 新增参数表格区域样式 */
+.api-property-form .param-table-section {
+  width: 100%;
+  height: calc(100% - 42px);
+  border-top: 1px solid var(--magic-idea-border-color);
+}
+
+.api-property-form .param-table-section .form-control-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.api-property-form .api-param-table-container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.api-property-form .param-body{
+  display: flex;
+  height: 100%;
+}
+
+/* 左侧迷你工具栏 */
+.api-property-form .param-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-right: 1px solid var(--magic-idea-border-color);
+}
+
+.api-property-form .toolbar-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.api-property-form .add-btn {
+  background-color: var(--magic-idea-button-background);
+  color: white;
+}
+
+.api-property-form .add-btn:hover {
+  background-color: var(--magic-idea-button-hover-background);
+}
+
+.api-property-form .delete-btn {
+  background-color: #f56c6c;
+  color: white;
+}
+
+.api-property-form .delete-btn:disabled {
+  background-color: var(--magic-idea-description-foreground);
+  cursor: not-allowed;
+}
+
+.api-property-form .delete-btn:hover:not(:disabled) {
+  background-color: #e64949;
+}
+
+/* 右侧表格容器 */
+.api-property-form .param-table-wrapper {
+  flex: 1;
+  overflow: auto;
+  background-color: var(--magic-idea-sidebar-background);
+}
+
+/* 参数表格样式 */
+.api-property-form .param-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.api-property-form .param-table tr.select{
+  background-color: var(--magic-idea-list-inactiveSelectionBackground);
+}
+
+.api-property-form .param-table th,
+.api-property-form .param-table td {
+  border: 1px solid var(--magic-idea-border-color);
+  padding: 4px 8px;
+  text-align: center;
+}
+
+/* 1. 第一个th/td 去掉左边框 */
+.api-property-form .param-table th:first-child,
+.api-property-form .param-table td:first-child {
+    border-left: none; /* 覆盖默认左边框 */
+}
+
+/* 2. 最后一个th/td 去掉右边框 */
+.api-property-form .param-table th:last-child,
+.api-property-form .param-table td:last-child {
+    border-right: none; /* 覆盖默认右边框 */
+}
+
+.api-property-form .param-table th {
+  background-color: var(--magic-idea-sidebar-background);
+  color: var(--magic-idea-sideBar-bodyColor);
+  font-weight: 400;
+  padding: 8px 12px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  border-top: none;
+}
+
+/* 单元格列宽适配 */
+.api-property-form .col-required {
+  width: 16px;
+  text-align: center;
+}
+
+.api-property-form .col-name {
+  width: 120px;
+}
+
+.api-property-form .col-value {
+  width: 120px;
+}
+
+.api-property-form .col-datatype {
+  width: 100px;
+}
+
+.api-property-form .col-default {
+  width: 120px;
+}
+
+.api-property-form .col-validate {
+  width: 100px;
+}
+
+.api-property-form .col-expression {
+  width: 180px;
+}
+
+.api-property-form .col-error {
+  width: 180px;
+}
+
+.api-property-form .col-desc {
+  width: 200px;
+}
+
+/* 复选框居中 */
+.api-property-form .param-table td input[type="checkbox"] {
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}

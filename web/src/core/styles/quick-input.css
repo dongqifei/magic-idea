@@ -1,0 +1,49 @@
+/* 滚动区域样式 */
+.magic-idea-scroll-area {
+  border-radius: 4px;
+  /* border: 1px solid #e0e0e0; */
+}
+
+.magic-idea-scroll-area::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.magic-idea-scroll-area::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.magic-idea-scroll-area::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+/* 快速输入组件样式 */
+.magic-idea-quick-input-input:focus,
+.magic-idea-quick-pick-input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  outline: none;
+}
+
+.magic-idea-quick-pick-input {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+
+.magic-idea-quick-pick-ok,
+.magic-idea-quick-input-ok {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+.magic-idea-quick-pick-ok:disabled,
+.magic-idea-quick-input-ok:disabled {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+}
+
+/* 列表项hover样式 */
+.magic-idea-quick-pick-input + .magic-idea-scroll-area ul li:hover {
+  background-color: #f5f5f5;
+}

@@ -1,0 +1,220 @@
+// *****************************************************************************
+// Copyright (C) 2024 EclipseSource GmbH.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Eclipse Public License v. 2.0 which is available at
+// http://www.eclipse.org/legal/epl-2.0.
+//
+// This Source Code may also be made available under the following Secondary
+// Licenses when the conditions for such availability set forth in the Eclipse
+// Public License v. 2.0 are satisfied: GNU General Public License, version 2
+// with the GNU Classpath Exception which is available at
+// https://www.gnu.org/software/classpath/license.html.
+//
+// SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
+// *****************************************************************************
+
+import { FrontendApplicationContribution } from '@MagicIdea/core';
+import { inject, injectable } from 'inversify';
+import { ReasoningSupport } from '@MagicIdea/ai-core';
+import { OpenAiLanguageModelsManager, OpenAiModelDescription, OPENAI_PROVIDER_ID } from './common';
+import { API_KEY_PREF, CUSTOM_ENDPOINTS_PREF, MODELS_PREF, USE_RESPONSE_API_PREF } from './common/openai-preferences';
+import { PREFERENCE_NAME_MAX_RETRIES } from '@MagicIdea/ai-core/common/ai-core-preferences';
+import { PreferenceService } from '@MagicIdea/core/preferences';
+
+@injectable()
+export class OpenAiFrontendApplicationContribution implements FrontendApplicationContribution {
+
+    @inject(PreferenceService)
+    protected preferenceService: PreferenceService;
+
+    @inject(OpenAiLanguageModelsManager)
+    protected manager: OpenAiLanguageModelsManager;
+
+    protected prevModels: string[] = [];
+    protected prevCustomModels: Partial<OpenAiModelDescription>[] = [];
+
+    onStart(): void {
+        this.preferenceService.ready.then(() => {
+            const apiKey = this.preferenceService.get<string>(API_KEY_PREF, undefined);
+            this.manager.setApiKey(apiKey);
+
+            const proxyUri = this.preferenceService.get<string>('http.proxy', undefined);
+            this.manager.setProxyUrl(proxyUri);
+
+            const models = this.preferenceService.get<string[]>(MODELS_PREF, []);
+            this.manager.createOrUpdateLanguageModels(...models.map(modelId => this.createOpenAIModelDescription(modelId)));
+            this.prevModels = [...models];
+
+            const customModels = this.preferenceService.get<Partial<OpenAiModelDescription>[]>(CUSTOM_ENDPOINTS_PREF, []);
+            this.manager.createOrUpdateLanguageModels(...this.createCustomModelDescriptionsFromPreferences(customModels));
+            this.prevCustomModels = [...customModels];
+
+            this.preferenceService.onDidPreferenceChanged(event => {
+                if (event.key === API_KEY_PREF) {
+                    this.manager.setApiKey(this.preferenceService.get<string>(API_KEY_PREF, undefined));
+                    this.updateAllModels();
+                } else if (event.key === MODELS_PREF) {
+                    this.handleModelChanges(this.preferenceService.get<string[]>(MODELS_PREF, []));
+                } else if (event.key === CUSTOM_ENDPOINTS_PREF) {
+                    this.handleCustomModelChanges(this.preferenceService.get<Partial<OpenAiModelDescription>[]>(CUSTOM_ENDPOINTS_PREF, []));
+                } else if (event.key === USE_RESPONSE_API_PREF) {
+                    this.updateAllModels();
+                } else if (event.key === 'http.proxy') {
+                    this.manager.setProxyUrl(this.preferenceService.get<string>('http.proxy', undefined));
+                    this.updateAllModels();
+                } else if (event.key === PREFERENCE_NAME_MAX_RETRIES) {
+                    this.updateAllModels();
+                }
+            });
+        });
+    }
+
+    protected handleModelChanges(newModels: string[]): void {
+        const oldModels = new Set(this.prevModels);
+        const updatedModels = new Set(newModels);
+
+        const modelsToRemove = [...oldModels].filter(model => !updatedModels.has(model));
+        const modelsToAdd = [...updatedModels].filter(model => !oldModels.has(model));
+
+        this.manager.removeLanguageModels(...modelsToRemove.map(model => `openai/${model}`));
+        this.manager.createOrUpdateLanguageModels(...modelsToAdd.map(modelId => this.createOpenAIModelDescription(modelId)));
+        this.prevModels = newModels;
+    }
+
+    protected handleCustomModelChanges(newCustomModels: Partial<OpenAiModelDescription>[]): void {
+        const oldModels = this.createCustomModelDescriptionsFromPreferences(this.prevCustomModels);
+        const newModels = this.createCustomModelDescriptionsFromPreferences(newCustomModels);
+
+        const modelsToRemove = oldModels.filter(model => !newModels.some(newModel => newModel.id === model.id));
+        const modelsToAddOrUpdate = newModels.filter(newModel =>
+            !oldModels.some(model =>
+                model.id === newModel.id &&
+                model.model === newModel.model &&
+                model.url === newModel.url &&
+                model.deployment === newModel.deployment &&
+                model.apiKey === newModel.apiKey &&
+                model.apiVersion === newModel.apiVersion &&
+                model.developerMessageSettings === newModel.developerMessageSettings &&
+                model.supportsStructuredOutput === newModel.supportsStructuredOutput &&
+                model.enableStreaming === newModel.enableStreaming &&
+                model.useResponseApi === newModel.useResponseApi &&
+                reasoningSupportEquals(model.reasoningSupport, newModel.reasoningSupport)));
+
+        this.manager.removeLanguageModels(...modelsToRemove.map(model => model.id));
+        this.manager.createOrUpdateLanguageModels(...modelsToAddOrUpdate);
+        this.prevCustomModels = [...newCustomModels];
+    }
+
+    protected updateAllModels(): void {
+        const models = this.preferenceService.get<string[]>(MODELS_PREF, []);
+        this.manager.createOrUpdateLanguageModels(...models.map(modelId => this.createOpenAIModelDescription(modelId)));
+
+        const customModels = this.preferenceService.get<Partial<OpenAiModelDescription>[]>(CUSTOM_ENDPOINTS_PREF, []);
+        this.manager.createOrUpdateLanguageModels(...this.createCustomModelDescriptionsFromPreferences(customModels));
+    }
+
+    protected createOpenAIModelDescription(modelId: string): OpenAiModelDescription {
+        const id = `${OPENAI_PROVIDER_ID}/${modelId}`;
+        const maxRetries = this.preferenceService.get<number>(PREFERENCE_NAME_MAX_RETRIES) ?? 3;
+        const useResponseApi = this.preferenceService.get<boolean>(USE_RESPONSE_API_PREF, false);
+        return {
+            id: id,
+            model: modelId,
+            apiKey: true,
+            apiVersion: true,
+            developerMessageSettings: openAIModelsNotSupportingDeveloperMessages.includes(modelId) ? 'user' : 'developer',
+            enableStreaming: !openAIModelsWithDisabledStreaming.includes(modelId),
+            supportsStructuredOutput: !openAIModelsWithoutStructuredOutput.includes(modelId),
+            maxRetries: maxRetries,
+            useResponseApi: useResponseApi,
+            reasoningSupport: reasoningSupportFor(modelId)
+        };
+    }
+
+    protected createCustomModelDescriptionsFromPreferences(
+        preferences: Partial<OpenAiModelDescription>[]
+    ): OpenAiModelDescription[] {
+        const maxRetries = this.preferenceService.get<number>(PREFERENCE_NAME_MAX_RETRIES) ?? 3;
+        return preferences.reduce((acc, pref) => {
+            if (!pref.model || !pref.url || typeof pref.model !== 'string' || typeof pref.url !== 'string') {
+                return acc;
+            }
+            // Default to the model-name heuristic so reasoning-capable GPT-5 / o-series models exposed via
+            // a custom endpoint still get the selector. Users can override via `reasoningSupport`
+            // (set to `null` to disable, or to a full `ReasoningSupport` object to customize).
+            const reasoningSupport: ReasoningSupport | undefined = 'reasoningSupport' in pref
+                ? (isReasoningSupport(pref.reasoningSupport) ? pref.reasoningSupport : undefined)
+                : reasoningSupportFor(pref.model);
+
+            return [
+                ...acc,
+                {
+                    id: pref.id && typeof pref.id === 'string' ? pref.id : pref.model,
+                    model: pref.model,
+                    url: pref.url,
+                    deployment: typeof pref.deployment === 'string' && pref.deployment ? pref.deployment : undefined,
+                    apiKey: typeof pref.apiKey === 'string' || pref.apiKey === true ? pref.apiKey : undefined,
+                    apiVersion: typeof pref.apiVersion === 'string' || pref.apiVersion === true ? pref.apiVersion : undefined,
+                    developerMessageSettings: pref.developerMessageSettings ?? 'developer',
+                    supportsStructuredOutput: pref.supportsStructuredOutput ?? true,
+                    enableStreaming: pref.enableStreaming ?? true,
+                    maxRetries: pref.maxRetries ?? maxRetries,
+                    useResponseApi: pref.useResponseApi ?? false,
+                    reasoningSupport
+                }
+            ];
+        }, []);
+    }
+}
+
+function isReasoningSupport(value: unknown): value is ReasoningSupport {
+    return !!value && typeof value === 'object' && Array.isArray((value as ReasoningSupport).supportedLevels);
+}
+
+/**
+ * Structural equality for {@link ReasoningSupport}. Used by {@link handleCustomModelChanges} to avoid
+ * needless model re-creation when the user supplies an explicit `reasoningSupport` object via
+ * preferences — each JSON deserialization yields a fresh object reference, so a `===` check would
+ * always report a change even when the contents are identical.
+ */
+function reasoningSupportEquals(a: ReasoningSupport | undefined, b: ReasoningSupport | undefined): boolean {
+    if (a === b) {
+        return true;
+    }
+    if (!a || !b) {
+        return false;
+    }
+    return a.defaultLevel === b.defaultLevel
+        && a.supportedLevels.length === b.supportedLevels.length
+        && a.supportedLevels.every((level, index) => level === b.supportedLevels[index]);
+}
+
+const openAIModelsWithDisabledStreaming: string[] = [];
+const openAIModelsNotSupportingDeveloperMessages = ['o1-preview', 'o1-mini'];
+const openAIModelsWithoutStructuredOutput = ['o1-preview', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo', 'o1-mini', 'gpt-4o-2024-05-13'];
+
+/** GPT-5 family: supports `minimal` in addition to `low | medium | high`. */
+const GPT5_REASONING = /^gpt-5(?:\.|-|$)/i;
+/** o-series reasoning models (o1, o3, o4): `low | medium | high`. */
+const O_SERIES_REASONING = /^o[134](?:-|$)/i;
+
+const GPT5_REASONING_SUPPORT: ReasoningSupport = {
+    supportedLevels: ['off', 'minimal', 'low', 'medium', 'high', 'auto'],
+    defaultLevel: 'auto'
+};
+
+const O_SERIES_REASONING_SUPPORT: ReasoningSupport = {
+    supportedLevels: ['off', 'low', 'medium', 'high', 'auto'],
+    defaultLevel: 'auto'
+};
+
+function reasoningSupportFor(modelId: string): ReasoningSupport | undefined {
+    if (GPT5_REASONING.test(modelId)) {
+        return GPT5_REASONING_SUPPORT;
+    }
+    if (O_SERIES_REASONING.test(modelId)) {
+        return O_SERIES_REASONING_SUPPORT;
+    }
+    return undefined;
+}

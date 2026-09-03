@@ -1,0 +1,16 @@
+.magic-api-explorer .welcome-view-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 25px 1em;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.magic-api-explorer .welcome-view-content>p {
+  width: 100%;
+}
+
+.magic-api-explorer .welcome-view-content>.button-container {
+  width: 100%;
+  max-width: 300px;
+}

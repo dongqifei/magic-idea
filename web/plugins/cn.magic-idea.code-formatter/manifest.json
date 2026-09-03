@@ -1,0 +1,10 @@
+{
+  "label": "Code formatter",
+  "name": "cn.magic-idea.code-formatter",
+  "url": "/plugins/cn.magic-idea.code-formatter/index.js",
+  "icon": "/plugins/cn.magic-idea.code-formatter/assets/icon.png",
+  "version": "1.0.0",
+  "author": "moonrailgun",
+  "description": "Code formatter using js-beautify",
+  "requireRestart": true
+}

@@ -1,0 +1,133 @@
+:is(#applicon-shell) .codicon.codicon-symbol-array {
+    color: var(--vscode-symbolIcon-arrayForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-boolean {
+    color: var(--vscode-symbolIcon-booleanForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-class {
+    color: var(--vscode-symbolIcon-classForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-method {
+    color: var(--vscode-symbolIcon-methodForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-color {
+    color: var(--vscode-symbolIcon-colorForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-constant {
+    color: var(--vscode-symbolIcon-constantForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-constructor {
+    color: var(--vscode-symbolIcon-constructorForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-value,
+:is(#applicon-shell) .codicon.codicon-symbol-enum {
+    color: var(--vscode-symbolIcon-enumeratorForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-enum-member {
+    color: var(--vscode-symbolIcon-enumeratorMemberForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-event {
+    color: var(--vscode-symbolIcon-eventForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-field {
+    color: var(--vscode-symbolIcon-fieldForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-file {
+    color: var(--vscode-symbolIcon-fileForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-folder {
+    color: var(--vscode-symbolIcon-folderForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-function {
+    color: var(--vscode-symbolIcon-functionForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-interface {
+    color: var(--vscode-symbolIcon-interfaceForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-key {
+    color: var(--vscode-symbolIcon-keyForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-keyword {
+    color: var(--vscode-symbolIcon-keywordForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-module {
+    color: var(--vscode-symbolIcon-moduleForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-namespace {
+    color: var(--vscode-symbolIcon-namespaceForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-null {
+    color: var(--vscode-symbolIcon-nullForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-number {
+    color: var(--vscode-symbolIcon-numberForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-object {
+    color: var(--vscode-symbolIcon-objectForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-operator {
+    color: var(--vscode-symbolIcon-operatorForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-package {
+    color: var(--vscode-symbolIcon-packageForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-property {
+    color: var(--vscode-symbolIcon-propertyForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-reference {
+    color: var(--vscode-symbolIcon-referenceForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-snippet {
+    color: var(--vscode-symbolIcon-snippetForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-string {
+    color: var(--vscode-symbolIcon-stringForeground);
+}
+
+
+:is(#applicon-shell) .codicon.codicon-symbol-struct {
+    color: var(--vscode-symbolIcon-structForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-text {
+    color: var(--vscode-symbolIcon-textForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-type-parameter {
+    color: var(--vscode-symbolIcon-typeParameterForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-unit {
+    color: var(--vscode-symbolIcon-unitForeground);
+}
+
+:is(#applicon-shell) .codicon.codicon-symbol-variable {
+    color: var(--vscode-symbolIcon-variableForeground);
+}

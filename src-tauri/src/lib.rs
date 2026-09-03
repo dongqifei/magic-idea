@@ -126,8 +126,15 @@ pub fn run() {
       #[cfg(desktop)]
       app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
 
-      #[cfg(desktop)]
-      app.deep_link().register_all()?;
+      #[cfg(any(target_os = "windows", target_os = "linux"))]
+      {
+        app.deep_link().register_all()?;
+      }
+
+      #[cfg(target_os = "macos")]
+      {
+        log::info!("Deep link registration skipped on macOS");
+      }
 
       if cfg!(debug_assertions) {
         app.handle().plugin(

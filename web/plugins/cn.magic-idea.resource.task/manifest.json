@@ -1,0 +1,10 @@
+{
+  "label": "定时任务",
+  "name": "cn.magic-idea.resource.task",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.resource.task/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.resource.task/assets/icon.png",
+  "version": "1.0.0",
+  "description": "管理系统定时任务资源信息",
+  "author": "amofly",
+  "requireRestart": true
+}

@@ -1,0 +1,10 @@
+{
+  "label": "MQTT",
+  "name": "cn.magic-idea.resource.mqtt",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.resource.mqtt/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.resource.mqtt/assets/icon.png",
+  "version": "1.0.0",
+  "description": "管理MQTT消息队列资源信息",
+  "author": "amofly",
+  "requireRestart": true
+}

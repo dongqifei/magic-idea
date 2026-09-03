@@ -1,0 +1,41 @@
+import { MagicApiClientService } from '..\..\..\magic-api-client-service';
+declare function loadClass(className: any): Promise<any>;
+declare const exportValue: {
+    findEnums: any;
+    findAttributes: any;
+    findMethods: (clazz: any, sort?: any) => any;
+    findFunction: () => any[];
+    loadClass: typeof loadClass;
+    findClass: (className: any) => any;
+    initMagicApiClient: (apiClient: MagicApiClientService) => void;
+    initContants: (config: any) => void;
+    initClasses: () => Promise<void>;
+    initImportClass: () => Promise<void>;
+    initialize: () => Promise<void>;
+    whenReady: () => Promise<void>;
+    onReady: (callback: () => void) => void;
+    getWrapperClass: (target: any) => any;
+    matchTypes: (parameters: any, args: any, extension: any) => Promise<boolean>;
+    getAutoImportModule: () => any;
+    getAutoImportClass: () => any;
+    getExtension: (clazz: any) => any;
+    getImportClass: () => any[];
+    getOnlineFunction: (path: any) => any;
+    setupOnlineFunction: (loader: any) => void;
+    setExtensionAttribute: (clazz: any, value: any) => void;
+    getSimpleClass: (target: any) => any;
+    getDefineModules: () => string[];
+    setImportResources: (resources: {
+        apis: Map<string, any>;
+        functions: Map<string, any>;
+    }) => void;
+    getImportResources: () => {
+        apis: Map<string, any>;
+        functions: Map<string, any>;
+    };
+    findResouceByPath: (path: string) => any;
+    hasResource: (path: string) => boolean;
+    hasImport: (packageName: string, module: boolean) => boolean;
+    getResouceCompletionItems: () => any[];
+};
+export default exportValue;

@@ -1,0 +1,11 @@
+/**
+ * Property Editor Css
+ */
+ .property-empty{
+  display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	flex-direction: column;
+	color: var(--magic-idea-secondary-foreground);
+ }

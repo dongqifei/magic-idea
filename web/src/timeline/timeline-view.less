@@ -1,0 +1,59 @@
+
+.magicidea-timeline {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .timeline-outer-container {
+    overflow-y: auto;
+    width: 100%;
+    flex-grow: 1;
+    font-size: 13px;
+    box-sizing: border-box;
+    line-height: 22px;
+
+    .empty-container{
+      color: var(--magic-idea-secondary-foreground);
+      margin: 8px 8px 0 8px;
+    }
+  }
+  .timeline-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 12px;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      background: var(--magic-idea-list-hoverBackground);
+    }
+    .timeline-item-icon {
+      margin-right: 6px;
+    }
+
+    .timeline-item-content{
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      .timeline-item-label {
+        margin-right: 6px;
+      }
+      .timeline-item-description {
+        font-size: 12px;
+        opacity: 0.7;
+      }
+    }
+    .timeline-timestamp-container{
+      opacity: 0.7;
+    }
+  }
+  
+  .timeline-item-selected {
+    background: var(--magic-idea-list-inactiveSelectionBackground);
+    color: var(--magic-idea-list-inactiveSelectionForeground)
+  }
+}

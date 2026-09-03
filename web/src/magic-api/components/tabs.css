@@ -1,0 +1,70 @@
+/* 选项卡容器 */
+.tabs-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 标签导航栏 */
+.tabs-nav {
+  display: flex;
+  background-color: var(--magic-idea-tabbar-background);
+  border-bottom: 1px solid var(--magic-idea-border-color);
+}
+
+/* 标签项 */
+.tabs-nav-item {
+  padding: 8px 16px;
+  color: var(--magic-idea-tabbar-foreground);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+/* 激活的标签 */
+.tabs-nav-item.active {
+  color: var(--magic-idea-tabbar-activeForeground);
+}
+
+.tabs-nav-item.active::after {
+  content: ''; /* 伪元素必须有content */
+  position: absolute; /* 绝对定位 */
+  left: 10%; /* 左右留空，宽度80%刚好居中 */
+  bottom: 0; /* 贴紧元素底部 */
+  width: 80%; /* 线条宽度（可根据需求调整） */
+  height: 2px; /* 线条高度（替代border-bottom的2px） */
+  background-color: var(--magic-idea-primary-color);
+  border-radius: 4px;
+}
+
+/* 标签hover效果 */
+.tabs-nav-item:hover:not(.active) {
+  /* background-color: var(--magic-idea-tabbar-hoverBackground); */
+  color: var(--magic-idea-tabbar-hoverForeground);
+}
+
+
+/* 面板内容容器 */
+.tabs-content {
+  flex: 1;
+  overflow: auto;
+}
+
+/* 面板项 */
+.tabs-content-item {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 隐藏非激活面板 */
+.tabs-content-item:not(.active) {
+  display: none;
+}
+
+.tabs-content .tabs-content-item .tab-pane{
+    height: 100%;
+    width: 100%;
+}

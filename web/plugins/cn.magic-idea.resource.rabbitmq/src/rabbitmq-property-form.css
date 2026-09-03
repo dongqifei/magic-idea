@@ -1,0 +1,44 @@
+.rabbitmq-property-form {
+  height: 100%;
+  overflow: auto;
+}
+
+.rabbitmq-property-form .form-container{
+  height: 100%;
+}
+
+.rabbitmq-property-form .form-content {
+  display: flex;
+  gap: 12px;
+  padding-block: 6px;
+}
+
+.rabbitmq-property-form .form-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rabbitmq-property-form .form-label {
+  text-align: right;
+  min-width: 80px;
+}
+
+.rabbitmq-property-form .form-control-wrapper {
+  flex: 1;
+}
+
+.rabbitmq-property-form .param-table-section {
+  width: 100%;
+  height: calc(100% - 42px);
+  border-top: 1px solid var(--magic-idea-border-color);
+}
+
+.rabbitmq-property-form .param-table-section .form-control-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.rabbitmq-property-form select.form-control {
+  cursor: pointer;
+}

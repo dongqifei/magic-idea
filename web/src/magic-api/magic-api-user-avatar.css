@@ -1,0 +1,61 @@
+.magic-api-user-avatars-group {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 8px;
+}
+
+.magic-api-user-avatars-group .avatar-item {
+  margin-left: -4px;
+  position: relative;
+}
+
+.magic-api-user-avatars-group .avatar-item:first-child {
+  margin-left: 0;
+}
+
+.magic-api-user-avatars-group .avatar-extra-count {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  font-size: 10px;
+  border-radius: 10px;
+  background-color: #00838F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  margin-left: -4px;
+  z-index: 3;
+}
+
+.magic-api-user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: white;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.magic-api-user-avatar.avatar-sm {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  line-height: 18px
+}
+
+.magic-api-user-avatar.avatar-md {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.magic-api-user-avatar.avatar-lg {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}

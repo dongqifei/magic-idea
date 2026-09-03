@@ -1,0 +1,10 @@
+{
+  "label": "RocketMQ",
+  "name": "cn.magic-idea.resource.rocketmq",
+  "url": "http://localhost:3001/plugins/cn.magic-idea.resource.rocketmq/index.js",
+  "icon": "http://localhost:3001/plugins/cn.magic-idea.resource.rocketmq/assets/icon.png",
+  "version": "1.0.0",
+  "description": "管理RocketMQ消息队列资源信息",
+  "author": "amofly",
+  "requireRestart": true
+}

@@ -1,0 +1,268 @@
+/* 独立通知容器 - 完全独立于面板 */
+.magic-idea-notification-single {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 10px !important;
+  z-index: 10010 !important;
+  width: 380px;
+  pointer-events: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+.magic-idea-notification-list {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 10px !important;
+  z-index: 9999 !important;
+  width: 380px;
+  background: var(--magic-idea-notification-background);
+  border: 1px solid var(--magic-idea-input-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px var(--magic-idea-shadow);
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+  max-height: 600px;
+  /* 最大高度限制 */
+  min-height: 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+.magic-idea-notification-list.hidden {
+  display: none;
+  pointer-events: none;
+}
+
+.magic-idea-notification-list.do-not-disturb {
+  opacity: 0.7;
+}
+
+/* 头部控制栏 */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  /* border-bottom: 1px solid var(--magic-idea-border-color); */
+  min-height: 36px;
+  font-size: 14px;
+}
+
+.notification-header-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: var(--magic-idea-foreground);
+}
+
+.notification-count {
+  color: var(--magic-idea-description-foreground);
+  font-size: 12px;
+}
+
+.notification-header-actions {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notification-header-actions .magic-idea-button {
+  font-size: 12px;
+  color: var(--magic-idea-icon-foreground);
+  cursor: pointer;
+  opacity: 1;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.notification-header-actions .magic-idea-button.secondary {
+  background: transparent;
+}
+
+.notification-header-actions .magic-idea-button.secondary:hover {
+  background: var(--magic-idea-toolbar-hoverBackground);
+}
+
+.magic-idea-notification-list-item-container {
+  width: 100%;
+  pointer-events: auto;
+}
+
+.magic-idea-notification-list-item-container:last-child {
+  margin-bottom: 0;
+}
+
+.notification-complete-panel{
+  overflow: auto;
+}
+
+.magic-idea-notification-list-item {
+  border-bottom: 1px solid var(--magic-idea-input-border);
+  padding: 12px;
+  color: var(--magic-idea-foreground);
+  opacity: 0;
+  /* transform: translateY(20px); */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.magic-idea-notification-single .magic-idea-notification-list-item {
+  border: 1px solid var(--magic-idea-input-border);
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  margin-top: 4px;
+  background: var(--magic-idea-notification-background);
+  border-radius: 4px;
+}
+
+.magic-idea-notification-list-item-container.visible .magic-idea-notification-list-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.magic-idea-notification-list-item:hover:not(:focus) {
+  background-color: var(--magic-idea-notification-hoverBackground);
+}
+
+.magic-idea-notification-list-item:focus {
+  outline: 1px solid var(--magic-idea-focus-border);
+  outline-offset: -1px;
+}
+
+.magic-idea-notification-list-item-content-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0px;
+}
+
+.magic-idea-notification-icon {
+  font-size: 18px !important;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  margin-right: 6px;
+}
+
+.codicon-info.info {
+  color: var(--magic-idea-primary-color, #2196f3);
+}
+
+.codicon-check.success {
+  color: var(--magic-idea-success-color, #4caf50);
+}
+
+.codicon-warning.warn {
+  color: var(--magic-idea-warning-color, #ff9800);
+}
+
+.codicon-error.error {
+  color: var(--magic-idea-error-color, #f44336);
+}
+
+.magic-idea-notification-message {
+  flex-grow: 1;
+  line-height: 24px;
+  font-size: 13px;
+}
+
+.magic-idea-notification-message a {
+  color: var(--magic-idea-link-color);
+  text-decoration: none;
+}
+
+.magic-idea-notification-message a:hover {
+  text-decoration: underline;
+}
+
+.magic-idea-notification-actions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.magic-idea-notification-actions .action-label {
+  color: var(--magic-idea-icon-foreground);
+  cursor: pointer;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.magic-idea-notification-actions .action-label:hover {
+  opacity: 1;
+}
+
+.magic-idea-notification-list-item-content-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.magic-idea-notification-source {
+  font-size: 11px;
+  color: var(--magic-idea-secondary-foreground);
+}
+
+.magic-idea-notification-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.magic-idea-notification-buttons .magic-idea-button {
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  padding: 4px;
+  border-radius: 2px;
+  min-width: 65px;
+  max-width: 160px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.magic-idea-notification-buttons  .magic-idea-button.primary {
+  background-color: var(--magic-idea-button-primary-background);
+  color: var(--magic-idea-button-primary-foreground);
+}
+
+.magic-idea-notification-buttons  .magic-idea-button.secondary {
+  background-color: var(--magic-idea-button-secondary-background);
+  color: var(--magic-idea-button-secondary-foreground);
+}
+
+.magic-idea-notification-buttons .magic-idea-button.primary:hover {
+  background-color: var(--magic-idea-button-primary-hover-background);
+}
+
+.magic-idea-notification-buttons .magic-idea-button.secondary:hover {
+  background-color: var(--magic-idea-button-secondary-hoverBackground);
+}
+
+/* 核心：推进+消失+循环加载条 */
+.magic-idea-notification-loading-bar {
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  position: absolute;
+  inset: auto 0 0 0;
+}
+
+.magic-idea-notification-loading-bar::before {
+  content: '';
+  display: block;
+  width: 100px;
+  height: 100%;
+  background: var(--magic-idea-primary-color);
+  animation: progress 5s linear infinite;
+}

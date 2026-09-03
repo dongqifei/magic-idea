@@ -1,0 +1,94 @@
+/* 扩展面板容器 */
+.extension-data-widget {
+  z-index: 3 !important;
+
+  .extension-view {
+    height: 100%;
+
+    /* 插件项样式 */
+    .extension-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      margin: 0;
+    }
+
+    .extension-item:hover {
+      background-color: var(--magic-idea-list-hoverBackground);
+    }
+
+    .extension-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .extension-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .extension-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .extension-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .extension-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--magic-idea-foreground);
+    }
+
+    .extension-desc {
+      font-size: 12px;
+      color: var(--magic-idea-description-foreground);
+      margin-top: 2px;
+    }
+
+    /* 空状态样式 */
+    .empty-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50%;
+      flex-direction: column;
+      color: var(--magic-idea-secondary-foreground);
+    }
+
+    /* 插件操作按钮组 */
+    .extension-actions {
+      display: flex;
+      gap: 5px;
+      min-width: 30px;
+    }
+
+    .action-btn {
+      padding: 2px 4px;
+      border: none;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      color: white;
+    }
+
+    .action-btn.install {
+      background-color: var(--magic-idea-primary-color);
+    }
+
+    .action-btn.uninstall {
+      background-color: var(--magic-idea-error-color);
+    }
+  }
+}

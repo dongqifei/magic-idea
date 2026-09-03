@@ -1,0 +1,10 @@
+{
+  "name": "@plugins/cn.magic-idea.resource.rabbitmq",
+  "main": "src/index.ts",
+  "version": "1.0.0",
+  "description": "管理RabbitMQ消息队列资源信息",
+  "dependencies": {},
+  "devDependencies": {
+    "magic-idea": "file:../../types"
+  }
+}

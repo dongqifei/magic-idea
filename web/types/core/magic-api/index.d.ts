@@ -1,0 +1,14 @@
+import { interfaces } from "inversify";
+import JavaClass from './language\magic-script\editor\java-class';
+export * from "./magic-api-constants-service";
+export * from "./magic-api-server-service";
+export * from "./magic-api-types";
+export * from "./magic-api-socket-service";
+export * from "./magic-api-online-user-service";
+export * from './magic-api-resource-service';
+export * from './magic-api-resource-contribution';
+export * from "./magic-api-client-service";
+export * from "./magic-api-resource-label-provider";
+export * from "./magic-api-tree-model";
+export { JavaClass };
+export declare function bindMagicApiModule(bind: interfaces.Bind): void;
