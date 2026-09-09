@@ -161,7 +161,6 @@ export class MagicApiExplorerWidget extends AccordionPanel {
     });
     this.commands.addCommand("magic-api:project:setting", {
       label: "项目设置",
-      isVisible: () => this.isSuccess(),
       iconClass: 'codicon codicon-gear',
       execute: () => {
         this.magicApiServerService.settingProject();
