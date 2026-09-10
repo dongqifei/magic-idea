@@ -94,4 +94,4 @@ npm run tauri build
 | -----  | ----- |
 | <img src="images/wx.png" width="128" height="128"> | <img src="images/zfb.png" width="128" height="128"> |
 
-本项目采用 MIT 许可证。MIT License Copyright (c) [2026] [amofly] 权限的详细信息请查看随附的 LICENSE 文件
+本项目采用 Apache 许可证。Apache License Copyright (c) [2026] [amofly] 权限的详细信息请查看随附的 LICENSE 文件

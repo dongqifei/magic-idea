@@ -277,7 +277,6 @@ export class MagicApiExplorerWidget extends AccordionPanel {
             type: 'dropdown',
             iconClass: 'codicon-ellipsis',
             tooltip: '更多操作',
-            visible: () => this.isSuccess(),
             menuItems: [
               {
                 commandId: 'magic-api:resource:import'
